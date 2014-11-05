@@ -2,6 +2,8 @@
 
 int error(int cislo_err){
 	switch (cislo_err) {	
+ 
+
 		case 1:
 		return 1;
 		

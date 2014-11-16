@@ -11,10 +11,12 @@ typedef struct String{
   int allocSize;
 } string;
 
-typedef struct SubString{
-  int length;
-  char *data;
-  int allocSize;
-} substring;
 
 int lenght(string *s);
+int newStrAlloc(char *p);
+int newStr(char *p);
+int cString(string *s1, char *p);
+int strAddChar(string *s1, char c);
+int strInit(string *s);
+void strFree(string *s);
+char *copy(string *s, int i, int n);

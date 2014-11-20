@@ -5,7 +5,7 @@ void htab_typ(struct htab_listitem *seznam,int typ){
   error(99);
   else
   {
-    if(seznam->data==0)     //ovšøi jestli nahodou nesaham na nìjaky prvek ktery už bys zapsany a ma èislo
+    if(seznam->typ==0)     //ovšøi jestli nahodou nesaham na nìjaky prvek ktery už bys zapsany a ma èislo
     {
           seznam->typ=typ;
     }

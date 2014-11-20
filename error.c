@@ -32,7 +32,7 @@ int error(int cislo_err){
 		return 9;
 
 		case 99:
-			//printf("jede to");
+			printf("jede to");
 		return 99;
 		
 		default:

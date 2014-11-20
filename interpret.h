@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
+#define VELIKOST 127
+#define POCET 16381
 
 int error(int cislo_err);
 

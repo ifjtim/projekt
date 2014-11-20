@@ -20,8 +20,8 @@ struct htab_listitem * htab_lookup(struct htab_t *t, const char *key){
 	error(99);
 	seznam->key=(char *) malloc(sizeof(char)*(strlen(key)+1));// nevime jak je velke slovo musime pro nìho takzy alokovat misto
 	strcpy(seznam->key,key); // nahrani udaju
-   free(key);// uvolnìi globalniho stringu
-   key=NULL; // nahrani na nìho nulu
+  // free(key);// uvolnìi globalniho stringu
+  // key=NULL; // nahrani na nìho nulu
 			seznam->typ=0; 
 			seznam->next=NULL;
 			t->ptr[pozice]=seznam;

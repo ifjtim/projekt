@@ -17,7 +17,7 @@ struct htab_listitem *ptr[];
 
 struct htab_t *htab_init(int size);
 struct htab_listitem * htab_lookup(struct htab_t *t, const char *key); //vlo¾eni id
-void htab_remove(struct htab_t *t,const char *key);
-void htab_free(struct htab_t *t);
-void htab_clear(struct htab_t *t);
-unsigned int hash_function(const char *str, unsigned htable_size);
+void htab_typ(struct htab_listitem *seznam,int typ);                  //vlozeni typu
+void htab_free(struct htab_t *t);                                    //uvolneni tabuky
+void htab_clear(struct htab_t *t);                                   //uvoleneni seynamu
+unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funkce

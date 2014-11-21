@@ -16,7 +16,19 @@ unsigned int htable_size;
 struct htab_listitem *ptr[];
 };
 
+struct htab_global{
+unsigned int htable_global;
+struct htab_listglobal *ptrg[];
+};
 
+struct htab_listglobal{  // struktura pro tabulku znaku key je jmeno idefikatora
+char *keyg;
+unsigned int typg;
+struct htab_t *ktera;
+struct htab_listglobal *nextg;
+};
+
+void smaz();
 struct htab_t *htab_init(int size);
 struct htab_listitem * htab_lookup(struct htab_t *t, const char *key); //vlo¾eni id
 void htab_typ(struct htab_listitem *seznam,int typ);                  //vlozeni typu

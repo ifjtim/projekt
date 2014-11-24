@@ -1,6 +1,5 @@
 
-#ifndef LEX_ANA_H
-  #define LEX_ANA_H
+
 
 //definice jednotlivych typu tokenu
 typedef enum {
@@ -53,4 +52,4 @@ int get_token();
 // globalni promenna
 extern char *token_str;
 
-#endif // LEX_ANA_H
+ // LEX_ANA_H

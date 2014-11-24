@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lex_ana.h"
+#include "interpret.h"
 
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0

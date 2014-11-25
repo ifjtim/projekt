@@ -1,11 +1,23 @@
 #include "interpret.h"
+
 int main(int argc, char *argv[])
 {
-	int a=0;
+	typp a=nic;
+	strInit(&str_g);
  if (argc > 1) {
         if (opensrcfile(argv[1]) == 0) { //otevøu soubor
-			 a= get_token();  //tady mi to nìkde sahne kde nema nevim proè skus to vyøe¹it
-			 printf("%d",a);
+			   while(a!=konec)
+				{
+			  a=get_token();  //tady mi to nìkde sahne kde nema nevim proè skus to vyøe¹it
+			 printf("%d\n",a);
+			if(a==1)
+			{
+				printf("%s",str_g.data);
+				 strFree(&str_g);
+				 strInit(&str_g);
+			}
+				}
+			 
 		  }
  }
  else error(99);

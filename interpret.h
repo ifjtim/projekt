@@ -34,9 +34,9 @@ struct htab_listglobal *nextg;
  struct TreAdres {
 struct TreAdres *ptr;
 struct TreAdres *skok;
-int operand1;
-int operand2;
-int operat;
+struct htab_listitem  operand1;
+struct htab_listitem  operand2;
+struct htab_listitem  operat;
 int indetifikator;
 };
 
@@ -54,24 +54,34 @@ unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funk
 int opensrcfile(char *filename);// tom: otevøeni souboru
 void closesrcfile ();           // tom: zavøeni souboru
 int get_token();
-typedef enum{
-    start,
-    cele_cislo, realne_cislo, cislo_e, cislo_operator,
-    identifikator, escape_stav,
-    dvoj_tecka_stav, komentar, vetsi_stav, mensi_stav,
-    konec
-} stav_type;
-
-typedef enum{
-    white_space, cislo, pismeno, strednik, apostrof, ls_zavorka, ps_zavorka, escape, tecka, dvoj_tecka, ls_zavorka_kom, ps_zavorka_kom, carka, ostatni_znaky,
-    plus_znak, minus_znak, krat_znak, lomeno_znak, vetsi_znak, mensi_znak, rovno_znak, pismeno_e
-} character_type;
-
-typedef enum{
-begin_id, boolean_id, do_id, else_id, end_id, false_id, find_id, forward_id, function_id, if_id, integer_id, readln_id, real_id, sort_id, string_id, then_id, true_id, var_id, while_id, write_id,
-} identifikator_type;
+typedef enum{ nic,id,cislo_real,cislo_integer,hodnota_string,plus,minus,krat,deleno,vetsi,mensi,mensi_rovnase,vetsi_nerovnase,rovnase,nerovna, priradene,
+zavorkaP,zavorkaD,dvojtecka,carka,strednik,tecka,K_begin,K_boolean,K_do,K_else,K_end,K_false,K_find,K_forward,K_function,K_if,K_integer,K_readln,K_real,K_sort,
+K_string,K_then,K_true,K_var,K_while,K_write,konec}typp;
 // globalni promenna
 //extern char *token_str;
+/********************************************************string*******************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct String{
+  int length;
+  char *data;
+  int allocSize;
+} string;
+
+string str_g;
+typp porovnej();
+int lenght(string *s);
+int newStrAlloc(char *p);
+int newStr(char *p);
+int cString(string *s1, char *p);
+int strAddChar(string *s1, char c);
+int strInit(string *s);
+void strFree(string *s);
+char *copy(string *s, int i, int n);
 
 /*******************************parser*************************************************************************************************************/
 

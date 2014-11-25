@@ -1,31 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//definice jednotlivych typu tokenu
-typedef enum {
-id, int_lit, real_lit, str_lit, bool_lit, key_word, data_type, operator, kom_lit,
-} tokentype_type;
-//definice operatoru
-typedef enum {
-prirazeni, plus, minus, krat, deleno, mensi, vetsi, mensi_rovno, vetsi_rovno, rovno, nerovno
-} operator_type;
-//definice jednotlivych velikosti pro
-typedef union {
-    char id[256];
-    int intval;
-    double realval;
-    char strval[256];
-    int boolval;
-    char keyword[15];
-    char datatype[15];
-    operator_type oper;
-    char kom[256];
-} token_value_type;
-//struktura funkce token
-typedef struct {
-    tokentype_type type;
-    token_value_type value;
-} token_type;
+
+#include "interpret.h"
 
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0
@@ -47,16 +24,15 @@ void closesrcfile (){
         return;
 }
 
-typedef enum{
-    white_space, cislo, pismeno, strednik, apostrof, ls_zavorka, ps_zavorka, escape, tecka, dvoj_tecka, ls_zavorka_kom, ps_zavorka_kom, carka, ostatni_znaky,
-    plus_znak, minus_znak, krat_znak, lomeno_znak, vetsi_znak, mensi_znak, rovno_znak,
-} character_type;
+
 //deklarace jednotlivych znaku ktery mohou prijit
 character_type get_char_type(char ch) {
     if ((ch == ' ') || (ch == '\n') || (ch == EOF)) {
         return white_space;
     } else if ((ch >= '0') && (ch <='9')) {
         return cislo;
+    } else if ((ch == 'e') || (ch =='E')) {
+        return pismeno_e;
     } else if ((ch == '_') || ((ch >= 'A')&& (ch<='Z')) || ((ch >= 'a') && (ch <='z'))) {
         return pismeno;
     } else if (ch == ';') {
@@ -98,9 +74,6 @@ character_type get_char_type(char ch) {
     }
 
 }
-typedef enum{
-begin_id, boolean_id, do_id, else_id, end_id, false_id, find_id, forward_id, function_id, if_id, integer_id, readln_id, real_id, sort_id, string_id, then_id, true_id, var_id, while_id, write_id,
-} identifikator_type;
 
 identifikator_type identifikator_compare (char *str){
     #define begin_str "begin"
@@ -124,45 +97,45 @@ identifikator_type identifikator_compare (char *str){
     #define while_str "while"
     #define write_str "write"
 
-    if (strcmp(*str, begin_str) == 0){
+    if (strcmp(str, begin_str) == 0){
         return begin_id;
-    }else if (strcmp(*str, boolean_str) == 0){
+    }else if (strcmp(str, boolean_str) == 0){
         return boolean_id;
-    }else if (strcmp(*str, do_str) == 0){
+    }else if (strcmp(str, do_str) == 0){
         return do_id;
-    }else if (strcmp(*str, else_str) == 0){
+    }else if (strcmp(str, else_str) == 0){
         return else_id;
-    }else if (strcmp(*str, end_str) == 0){
+    }else if (strcmp(str, end_str) == 0){
         return end_id;
-    }else if (strcmp(*str, false_str) == 0){
+    }else if (strcmp(str, false_str) == 0){
         return false_id;
-    }else if (strcmp(*str, find_str) == 0){
+    }else if (strcmp(str, find_str) == 0){
         return find_id;
-    }else if (strcmp(*str, forward_str) == 0){
+    }else if (strcmp(str, forward_str) == 0){
         return forward_id;
-    }else if (strcmp(*str, function_str) == 0){
+    }else if (strcmp(str, function_str) == 0){
         return function_id;
-    }else if (strcmp(*str, if_str) == 0){
+    }else if (strcmp(str, if_str) == 0){
         return if_id;
-    }else if (strcmp(*str, integer_str) == 0){
+    }else if (strcmp(str, integer_str) == 0){
         return integer_id;
-    }else if (strcmp(*str, readln_str) == 0){
+    }else if (strcmp(str, readln_str) == 0){
         return readln_id;
-    }else if (strcmp(*str, real_str) == 0){
+    }else if (strcmp(str, real_str) == 0){
         return real_id;
-    }else if (strcmp(*str, sort_str) == 0){
+    }else if (strcmp(str, sort_str) == 0){
         return sort_id;
-    }else if (strcmp(*str, string_str) == 0){
+    }else if (strcmp(str, string_str) == 0){
         return string_id;
-    }else if (strcmp(*str, then_str) == 0){
+    }else if (strcmp(str, then_str) == 0){
         return then_id;
-    }else if (strcmp(*str, true_str) == 0){
+    }else if (strcmp(str, true_str) == 0){
         return true_id;
-    }else if (strcmp(*str, var_str) == 0){
+    }else if (strcmp(str, var_str) == 0){
         return var_id;
-    }else if (strcmp(*str, while_str) == 0){
+    }else if (strcmp(str, while_str) == 0){
         return while_id;
-    }else if (strcmp(*str, write_str) == 0){
+    }else if (strcmp(str, write_str) == 0){
         return write_id;
     }
 }
@@ -173,28 +146,44 @@ void add_char(char *str, char ch, int *index) {
     str[*index] = 0;
     return;
 }
-// navratov hodnota = NULL pokud je nacten cely soubor, jinak vraci ukazal na token globalni promennou
+void remove_last_char(char *str, int *index) {
+    (*index)--;
+    str[*index] = 0;
+    return;
+}
+void id_add_char (char **str, char ch, int *index, int *pocet_1) {
+    (*str)[*index] = ch;
+    (*index)++;
+    (*str)[*index] = 0;
+    if ((*index) == ((*pocet_1)-2)){
+        *pocet_1 = (*pocet_1) + 10;
+        (*str) = realloc((*str), *pocet_1);
+    }
+
+}
+// navratova hodnota = NULL pokud je nacten cely soubor, jinak vraci ukazal na token globalni promennou
 //deklarace jednotlivych stavu v konecnem automatu
-typedef enum{
-    start,
-    cele_cislo, realne_cislo, realne_cislo_e, realne_cislo_exponent,
-    identifikator, operator_symbol, apostrof_stav,
-    dvoj_tecka_stav, komentar, vetsi_stav, mensi_stav,
-    konec
-} stav_type;
+
+// globalni promenna
+char *token_str = NULL;
 
 
-token_type *get_token(){
+int get_token(){
     stav_type stav = start;
     char ch;
-    char token_str[256] = "";
     int token_index = 0;
+    int pocet = 12;
+    double number;
+    //extern char id_str [12];
+    if (token_str == NULL) {
+      token_str = (char *)malloc(pocet);
+    }
 
     do {
         if ((ch = getc(srcfile)) == EOF) {
             // jestlize se jedna o prvni cteni, tj. neni rozecten zadny token, vrati se NULL= konec zdrojoveho souboru
             if (stav == start) {
-                return NULL;
+                return 0;
             } else {
                 ungetc(ch, srcfile); // vrat eof do cteneho suboru aby se priste ukoncilo korektne nacitani zdrojoveho souboru
             }
@@ -205,179 +194,253 @@ token_type *get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = cele_cislo;
-                    add_char(token_str, ch, &token_index);
+                    id_add_char(token_str, ch, &token_index, &pocet);
                     break;
                 case pismeno:
                     stav = identifikator;
-                    add_char(token_str, ch, &token_index);
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case pismeno_e:
+                    stav = identifikator;
+                    id_add_char(token_str, ch, &token_index, &pocet);
                     break;
                 case strednik:
-                    token.type = key_word;
-                    token.value.keyword[0] = ';';
-                    token.value.keyword[1] = 0;
-                    return &token;
+                    return 3;
                     break;
                 case plus_znak:
-                    return;
+                    return 4;
                     break;
                 case minus_znak:
-                    return;
+                    return 5;
                     break;
                 case krat_znak:
-                    return;
+                    return 6;
                     break;
                 case lomeno_znak:
-                    return;
+                    return 7;
                     break;
                 case rovno_znak:
-                    return;
+                    return 12;
                     break;
                 case vetsi_znak:
                     stav = vetsi_stav;
                     break;
-                case apostrof:
-                    stav = apostrof_stav;
-                    add_char(token_str, ch, &token_index);
-                    break;
-                case ls_zavorka:
-                    token.type = key_word;
-                    token.value.keyword[0] = '(';
-                    token.value.keyword[1] = 0;
-                    return &token;
-                    break;
-                case ps_zavorka:
-                    token.type = key_word;
-                    token.value.keyword[0] = ')';
-                    token.value.keyword[1] = 0;
-                    return &token;
-                    break;
-                case escape:
-                    token.type = key_word;
-                    token.value.keyword[0] = '#';
-                    token.value.keyword[1] = 0;
-                    break;
                 case dvoj_tecka:
                     stav = dvoj_tecka_stav;
-                    add_char(token_str, ch, &token_index);
+                    break;
+                case apostrof:
+                    return 13;
+                    break;
+                case ls_zavorka:
+                    return 14;
+                    break;
+                case ps_zavorka:
+                    return 15;
+                    break;
+                case escape:
+                    stav = escape_stav;
+                    id_add_char(token_str, ch, &token_index, &pocet);
                     break;
                 case ls_zavorka_kom:
                     stav = komentar;
-                    add_char(token_str, ch, &token_index);
                     break;
                 case white_space:
                     stav = start;
-                    add_char(token_str, ch, &token_index);
+                    break;
+                default:
+                    return EOF;
                     break;
                 }
             break;
-        case vetsi_stav:
+        case dvoj_tecka_stav:
                 switch (get_char_type(ch)) {
                 case rovno_znak:
-                    return;
+                    return 40;
                     break;
                 default:
                     ungetc(ch, srcfile);
-                    return;
+                    return 18;
+                    break;
+                }
+        case vetsi_stav:
+                switch (get_char_type(ch)) {
+                case rovno_znak:
+                    return 10;
+                    break;
+                default:
+                    ungetc(ch, srcfile);
+                    return 8;
                     break;
                 }
         case mensi_stav:
                 switch (get_char_type(ch)) {
                 case rovno_znak:
-                    return;
+                    return 11;
                     break;
                 case vetsi_znak:
-                    return;
+                    return 41;
                     break;
                 default:
                     ungetc(ch, srcfile);
-                    return;
+                    return 9;
                     break;
                 }
         case cele_cislo:
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = cele_cislo;
-                    add_char(token_str, ch, &token_index);
+                    id_add_char(token_str, ch, &token_index, &pocet);
                     break;
-                case white_space:
-
+                case tecka:
+                    stav = realne_cislo;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case pismeno_e:
+                    stav = cislo_e;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case plus_znak:
+                    stav = cislo_operator;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
                 default:
                     ungetc(ch, srcfile);
-                    token.type = int_lit;
-                    sscanf(token_str,"%d", &(token.value.intval));
-                    return &token;
+                    //sscanf(token_str,"%d", &(token.value.intval));
+                    return 2;
+                }
+        case realne_cislo:
+                switch (get_char_type(ch)) {
+                case cislo:
+                    stav = realne_cislo;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case pismeno_e:
+                    stav = cislo_e;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case plus_znak:
+                    stav = cislo_operator;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case minus_znak:
+                    stav = cislo_operator;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                default:
+                    ungetc(ch, srcfile);
+                    //sscanf(token_str,"%d", &(token.value.intval));
+                    return 2;
+                }
+        case escape_stav:
+                switch (get_char_type(ch)) {
+                case cislo:
+                    stav = escape_stav;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                default:
+                    ungetc(ch, srcfile);
+                    //sscanf(token_str,"%d", &(token.value.intval));
+                    return 16;
+                }
+        case cislo_e:
+                switch (get_char_type(ch)) {
+                case cislo:
+                    stav = cislo_e;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                default:
+                    ungetc(ch, srcfile);
+                    //sscanf(token_str,"%d", &(token.value.intval));
+                    return 2;
+                }
+        case cislo_operator:
+                switch (get_char_type(ch)) {
+                case pismeno_e:
+                    stav = cislo_e;
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                default:
+                    ungetc(ch, srcfile);
+                    ungetc(ch, srcfile);
+                    remove_last_char(token_str, &token_index);
+                    //sscanf(token_str,"%d", &(token.value.intval));
+                    return 2;
                 }
         case identifikator:
                 switch (get_char_type(ch)){
                 case pismeno:
                     stav = identifikator;
-                    add_char(token_str, ch, &token_index);
+                    id_add_char(token_str, ch, &token_index, &pocet);
+                    break;
+                case pismeno_e:
+                    stav = identifikator;
+                    id_add_char(token_str, ch, &token_index, &pocet);
                     break;
                 default:
                     switch (identifikator_compare (token_str)){
                     case begin_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 20;
                     case boolean_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 21;
                     case do_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 22;
                     case else_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 23;
                     case end_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 24;
                     case false_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 25;
                     case find_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 26;
                     case forward_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 27;
                     case function_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 28;
                     case if_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 29;
                     case integer_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 30;
                     case readln_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 31;
                     case real_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 32;
                     case sort_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 33;
                     case string_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 34;
                     case then_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 35;
                     case true_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 36;
                     case var_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 37;
                     case while_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 38;
                     case write_id:
                         ungetc(ch, srcfile);
-                        return;
+                        return 39;
                     default:
                         ungetc(ch, srcfile);
-                        return;
+                        return 1;
                     }
                     token.type = id;
                     break;
@@ -386,27 +449,16 @@ token_type *get_token(){
                 switch (get_char_type(ch)) {
                 case ps_zavorka_kom:
                     stav = start;
-                    token.type = kom_lit;
-                    sscanf(token_str,"%s", &(token.value.kom));
-                    return &token;
+                    break;
                 default:
                     stav = komentar;
-                }
-        case apostrof_stav:
-                switch (get_char_type(ch)) {
-                case apostrof:
-                    stav = start;
-                    token.type = kom_lit;
-                    sscanf(token_str,"%s", &(token.value.kom));
-                    return &token;
-                default:
-                    stav = apostrof_stav;
+                    break;
                 }
         }
 
     } while (stav != konec);
 }
-//TO DO!
+/*
 int main (int argc, char* argv[]) {
     token_type *mytoken;
     if (argc > 1) {
@@ -430,3 +482,4 @@ int main (int argc, char* argv[]) {
     }
 
 }
+*/

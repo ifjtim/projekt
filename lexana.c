@@ -39,7 +39,7 @@ int get_token(){
 		stav=1;// id
 		strAddChar(&str_g,znak);
 	}
-	else if ((znak >= '0') && (znak <='9')) stav=2; //cislo
+	else if ((znak >= '0') && (znak <='9')) stav=2; //cislo dodelej cislo predavani cisla
 	else if (znak=='{') stav=3; //komentar
 	else if (znak=='>')stav=4;
 	else if	 (znak=='<') stav=5;

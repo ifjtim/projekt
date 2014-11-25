@@ -1,62 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+ /*	hm
+  *		tak
+  *	tohle
+  *		bude
+  *	pekny
+  *		orisek
+  *	damy
+  *		a
+  *	panove
+  */
+
+ 
 #include "mystring.h"
 
-int newStrAlloc(char *p);
-int newStr(char *p);
-int cString(string *s1, char *p);
-int strAddChar(string *s1, char c);
-int strInit(string *s);
-void strFree(string *s);
-int length(string *s);
-char *copy(string *s, int i, int n);
-
-int main()
-{
-  string str;
-  char *p;
-  if ((p = malloc(sizeof(char))) == NULL)
-  {
-    return 0;
-  }
-  int strlength = 0;
-  if (strInit(&str) != 1)
-  {
-    return 0;
-  }
-  printf("Zadejte retezec:\n");
-  if (newStr(p) != 1) 
-  {
-    return 0;
-  }
-  printf("string = %s\n", p);
-  cString(&str, p);
-  printf("cString = %s\n", str.data);
-  if (strlength < 0)
-  {
-    printf("Neplatny retezec\n");
-    return 0;
-  }
-  else
-  {
-    printf("Delka retezce je:%d\n", length(&str));
-  }
-  int i, n;
-  printf("Podretezec: zadejte parametry funkce\ni = zacatek\n");
-  scanf("%d", &i);
-  printf("n = delka\n");
-  scanf("%d", &n);
-  if (*copy(&str, i, n) == '\0')
-  {
-    return 0;
-  }
-  strFree(&str);
-  return 0;
-}
 
 int cString(string *s1, char *p)
 {
@@ -184,22 +139,49 @@ int length(string *s)
 }
 
 char *copy(string *s, int i, int n)	// hmhm potreba dodelat tuto fci
-{					// nevim do ceho ukladat podretezec
-  i -=1;
-  char ch[n];
-  ch[n] = '\0';
-  if ((i+n-1) > s->length)
+{	
+				// nevim do ceho ukladat podretezec
+  string s2;
+  if (strInit(&s2) == -1)
   {
-    return '\0';
+    s2.data[0] = 'x';
+    return s2.data;
   }
   else
   {
-    for (int l = 0; l < n ; l++)
+    i -=1;
+    if ((i+n) > s->length)
     {
-      ch[l] = s->data[i++];
+      s2.data[0] = 'x';
+      return s2.data;
     }
-    printf("substring = %s\n", ch);
+    else
+    {
+      for (int l = 0; l < n ; l++)
+      {
+	s2.data[l] = s->data[i++];
+      }
    // return ch;			// :((
+    }
   }
-  return "a";
+  return s2.data;
+}
+
+char *strPlusStr(string *s1, string *s2)
+{
+  int i = strlen(s1->data);
+  s2->length = strlen(s2->data);
+  char *result = NULL;
+  if ((result = (char *) malloc(sizeof((char)*(i+s2->length+1)))) == NULL)
+    return 'x';
+  if (s1->data != NULL)
+      memcpy(result, s1->data, s1->lenght);
+  if (s2->data != NULL)
+  {
+    for (int j = 0; i < (i+s2->length+1); i++)
+    {
+      result[i] = s2->data[j++];
+    }
+  }
+  return result;
 }

@@ -86,3 +86,16 @@ char *copy(string *s, int i, int n);
 /*******************************parser*************************************************************************************************************/
 int neww;
 typp token;
+void sts();
+void new_token();
+int func();
+void type();
+void params();
+void params_next();
+void op();
+void sts();
+void rite();
+void expr();
+void next();
+void returnn();
+void en();

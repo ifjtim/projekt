@@ -69,7 +69,7 @@ int get_token(){
 		 if ((znak == '_') || ((znak >= 'A')&& (znak<='Z')) || ((znak >= 'a') && (znak <='z')) || ((znak >= '0') && (znak <='9')))
 		 {
 			
-		strAddChar(&str_g,znak);
+		//strAddChar(&str_g,znak);
 	 
 			 stav=1;
 		 }

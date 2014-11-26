@@ -3,19 +3,21 @@
 int main(int argc, char *argv[])
 {
 	typp a=nic;
+	int c;
 	strInit(&str_g);
  if (argc > 1) {
         if (opensrcfile(argv[1]) == 0) { //otevøu soubor
 			   while(a!=konec)
 				{
-			  a=get_token();  
+			 /* a=get_token();  
 			 printf("%d\n",a);
 			if(a==1)
 			{
-				printf("%s",str_g.data);
+				
 				 strFree(&str_g);
 				 strInit(&str_g);
-			}
+			}*/
+			c= func();
 				}
 			 
 		  }

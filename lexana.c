@@ -96,11 +96,12 @@ int get_token(){
 	case 3:
 		if (znak=='}') stav=0;
 		 else stav=3;
+		 break;
 	case 4:
 		if(znak=='=')
 		{
 			stav=0;
-			return vetsi_nerovnase;
+			return vetsi_rovnase;
 		}
 		 else 
 		 {
@@ -131,9 +132,15 @@ int get_token(){
 	 case 6:
 		 if(znak=='?') 
 		 {
-			 stav=0;
-			 return K_string;
+			  
+			 stav=11;
+			 
 		 }
+		 else if(znak=='#')
+		 {
+			 stav=10;
+		 }
+		 
 		 else stav=6;
 		 break;
 	 case 7:
@@ -148,8 +155,36 @@ int get_token(){
 			 return cislo_real;
 		 }
 		 break;
-		 
+	case 10:
+		if ((znak >= '0') && (znak <='9')) stav=10;
+		 if(znak=='?') 
+			  {
+			 stav=0;
+			 return hodnota_string;//udelej prechod kuba ho mozna ma
+		 }
+		 else error(1);
+		break;
+	case 11:
+		if(znak=='#')
+			stav=12;
+			else
+			  {
+			 stav=0;
+			 ungetc(znak, srcfile);
+			 return hodnota_string;
+			}
+			break;
+	case 12:
+		if ((znak >= '0') && (znak <='9')) stav=12;
+		if(znak=='?') 
+			  {
+			 stav=6;
+			 //udelej prechod kuba ho mozna ma
+		 }
+		
+		
 	}
+	
 	}	
 	return 0;
 }

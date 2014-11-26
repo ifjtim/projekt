@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
         if (opensrcfile(argv[1]) == 0) { //otevøu soubor
 			   while(a!=konec)
 				{
-			  a=get_token();  //tady mi to nìkde sahne kde nema nevim proè skus to vyøe¹it
+			  a=get_token();  
 			 printf("%d\n",a);
 			if(a==1)
 			{

@@ -27,7 +27,7 @@ int strtoint (char * S1)
 float strtofloat(char *S1)
 
 {
-    char *s;
+
     char *stopstring;
     float b;
 

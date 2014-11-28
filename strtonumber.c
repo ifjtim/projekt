@@ -4,7 +4,7 @@
 
 
 /* DEKLARACE*/
-int chtoint (char * S1);
+int strtoint (char * S1);
 float strtofloat(char *S1);
 
 /* STRING TO INT*/

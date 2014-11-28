@@ -48,7 +48,7 @@ int error(int cislo_err){
 		
 		default:
 			
-			printf("chybnz error");
+			printf("chybny error");
 			return 99;
 	}
 

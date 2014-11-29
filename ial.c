@@ -11,7 +11,7 @@
 
 #include "ial.h"
 #include "mystring.h"
-   
+  #include "interpret.h"
 /*void bLast(string *search, int *last)
 {					// pomocna funkce find
   int ahoj = 0;

@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "interpret.h"
+
 
 
 typedef struct String{
@@ -25,6 +25,7 @@ typedef struct String{
   int allocSize;
 } string;
 
+string str_g;
 
 void cString(string *s1, string *p);
 

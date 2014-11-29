@@ -11,6 +11,7 @@
 
  
 #include "mystring.h"
+#include "ial.h"
 
 
 void cString(string *s1, string *p)

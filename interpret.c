@@ -1,5 +1,6 @@
 #include "interpret.h"
 #include "mystring.h"
+#include "ial.h"
 
 
 int main(int argc, char *argv[])

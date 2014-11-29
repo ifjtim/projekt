@@ -1,5 +1,6 @@
 #include "interpret.h"
 #include "mystring.h"
+#include "ial.h"
 
 void new_token()
 {
@@ -30,7 +31,7 @@ int func()
 			
 			sts();
 			en();
-			printf("Q");
+			//printf("Q");
 			new_token();
 			if(token==tecka)//token se musi rovnat tecte
 			{
@@ -227,7 +228,7 @@ void sts(){
 		if(token!=K_begin)error(2);
 		
 		sts();
-		printf("tadz");
+		//printf("tadz");
 		en();
 		
 		

@@ -1,5 +1,6 @@
 	#include<stdio.h>
 #include "interpret.h"
+#include "ial.h"
 
 int error(int cislo_err){
 	switch (cislo_err) {	

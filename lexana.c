@@ -4,6 +4,7 @@
 
 #include "interpret.h"
 #include "mystring.h"
+#include "ial.h"
 
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0

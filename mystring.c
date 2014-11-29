@@ -13,54 +13,54 @@
 #include "mystring.h"
 
 
-int cString(string *s1, char *p)
+void cString(string *s1, string *p)
 {
-  int lenp = strlen(p);
+  int lenp = strlen(p->data);
   char ascii = 0;
   int len = 0;
   int index = 1;
-  s1->length = strlen(s1->data);
-  if ((p[0] != '\'') && (p[lenp-1] != '\'')) 
+  p->length = strlen(p->data);
+  if ((p->data[0] != '\'') && (p->data[lenp-1] != '\'')) 
   {
-    return -1;
+    error(4);
   }
   else 
   {
     while (index < lenp-1)
     {
-      if (p[index] != '\'')
+      if (p->data[index] != '\'')
       {
-	strAddChar(s1, p[index]);
+	strAddChar(s1, p->data[index]);
 	index++;
 	len++;
       }
       else
       {
 	index++;
-	if (p[index] == '\'')
+	if (p->data[index] == '\'')
 	{
-	  strAddChar(s1, p[index]);
+	  strAddChar(s1, p->data[index]);
 	  len++;
 	  index++;
 	}
-	else if (p[index] == '\0')
+	else if (p->data[index] == '\0')
 	{
-	  return len;
+	  error(4);
 	}
-	else if (p[index] != '#')
+	else if (p->data[index] != '#')
 	{
-	  return -3;
+	  error(4);
 	}
 	else
 	{
 	  int isnum = -1;
 	  index++;
-	  while (p[index] >= '0' && p[index] <= '9')
+	  while (p->data[index] >= '0' && p->data[index] <= '9')
 	  {
 	    if (isnum == -1) 
 	    {
 	      int num = 0;
-	      if ((num = strtol(&p[index], NULL, 10)) <= 255)
+	      if ((num = strtol(&p->data[index], NULL, 10)) <= 255)
 	      {
 		ascii = num;
 	      }
@@ -68,9 +68,9 @@ int cString(string *s1, char *p)
 	    index++;
 	    isnum = 1;
 	  }
-	  if (p[index] != '\'' || isnum == -1)
+	  if (p->data[index] != '\'' || isnum == -1)
 	  {
-	    return -2;
+	    error(4);
 	  }
 	  else
 	  {
@@ -82,33 +82,15 @@ int cString(string *s1, char *p)
       }
     }
     s1->length = len;
-    return len;
   }
-}
-
-int newStr(char *p)
-{
-  unsigned int i = 0;
-  char c;
-  while((c = getchar()) != '\n')
-  { 
-    if (i >= strlen(p)) 
-    {
-      p = (char *) realloc(p, strlen(p) + 1);
-    }
-    p[i] = c;
-    i++;
-  }
-  return 1;
 }
 
 int strAddChar(string *s1, char c)
-// prida na konec retezce jeden znak
 {
    if (s1->length + 1 >= s1->allocSize)
    {
       if ((s1->data = (char*) realloc(s1->data, s1->length + 8)) == NULL)
-         return -1;
+        error(99);
       s1->allocSize = s1->length + 8;
    }
    s1->data[s1->length] = c;
@@ -118,14 +100,19 @@ int strAddChar(string *s1, char c)
 }
 
 int strInit(string *s)
-// funkce vytvori novy retezec
 {
    if ((s->data = (char*) malloc(8)) == NULL)
-      return -1;
+      error(99);
    s->data[0] = '\0';
    s->length = 0;
    s->allocSize = 8;
    return 1;
+}
+
+void clearStr(string *s)
+{
+  s->data[0] = '\0';
+  s->length = 0;
 }
 
 void strFree(string *s)
@@ -139,49 +126,44 @@ int length(string *s)
 }
 
 char *copy(string *s, int i, int n)	// hmhm potreba dodelat tuto fci
-{	
-				// nevim do ceho ukladat podretezec
-  string s2;
-  if (strInit(&s2) == -1)
-  {
-    s2.data[0] = 'x';
-    return s2.data;
-  }
+{
+  char *s2 = NULL;
+  if ((s2 = (char *) malloc((sizeof(char))*(n+1))) == NULL)
+    error(99);
   else
   {
     i -=1;
     if ((i+n) > s->length)
     {
-      s2.data[0] = 'x';
-      return s2.data;
+      error(4);
     }
     else
     {
       for (int l = 0; l < n ; l++)
       {
-	s2.data[l] = s->data[i++];
+	s2[l] = s->data[i++];
       }
-   // return ch;			// :((
+    return s2;
     }
   }
-  return s2.data;
+  return s2;
 }
 
-/*char *strPlusStr(string *s1, string *s2)
+char *strPlusStr(string *s1, string *s2)
 {
   int i = strlen(s1->data);
-  s2->length = strlen(s2->data);
+  int o = strlen(s2->data);
   char *result = NULL;
-  if ((result = (char *) malloc(sizeof((char)*(i+s2->length+1)))) == NULL)
-    return NULL;
+  if ((result = (char *) malloc((sizeof(char))*(i+o+1))) == NULL)
+    error(99);
   if (s1->data != NULL)
-      memcpy(result, s1->data, s1->lenght);
+    strcpy(result, s1->data);
   if (s2->data != NULL)
   {
-    for (int j = 0; i < (i+s2->length+1); i++)
+    for (int j = 0; i < (strlen(s1->data)+o+1); i++)
     {
       result[i] = s2->data[j++];
     }
   }
   return result;
-}*/
+}

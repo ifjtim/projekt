@@ -24,6 +24,9 @@ typedef struct String{
   int allocSize;
 } string;
 
+string str_g;
+
+
 
 int newStrAlloc(char *p);
 int newStr(char *p);

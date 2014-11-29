@@ -12,3 +12,15 @@ struct htab_t *htab_init(int size){
  t->htable_size = size;
  return t;// vraci odkaz na tabulku
 }
+
+struct htab_global *htab_initg(int size){
+	struct htab_global *t;
+	
+ if((t = (struct htab_global *) malloc(sizeof(struct htab_global) + (sizeof(struct htab_listglobal)*size)))==NULL)// alokace tabulky a alokoce poctu ptr
+   return NULL;
+ for(int i=0; size==i;i++){ // vynulovani ptr
+	 t->ptrg[i]=NULL;
+ }
+ t->htable_global = size;
+ return t;// vraci odkaz na tabulku
+}

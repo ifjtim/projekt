@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "interpret.h"
+#include "mystring.h"
 
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0
@@ -69,7 +70,7 @@ int get_token(){
 		 if ((znak == '_') || ((znak >= 'A')&& (znak<='Z')) || ((znak >= 'a') && (znak <='z')) || ((znak >= '0') && (znak <='9')))
 		 {
 			
-		//strAddChar(&str_g,znak);
+		strAddChar(&str_g,znak);
 	 
 			 stav=1;
 		 }
@@ -117,11 +118,7 @@ int get_token(){
 			 return mensi_rovnase;
 			
 		 }
-		 else if(znak=='>')
-		 {
-			 stav=0;
-			 return nerovna;
-		 }
+		 
 		  else 
 		 {
 			  stav=0;

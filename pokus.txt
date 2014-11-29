@@ -1,21 +1,19 @@
+
 var
-a : integer;
+a1 : integer;
 vysl : integer;
+v0ysl : real;
 begin
 write(?Zadejte cislo pro vypocet faktorialu: ?);
-readln(a);
+write(?Zadejte cislo pro vypocet faktorialu: ?);
 if a < 0 then
 begin
 write(?Faktorial nelze spocitat?#10??)
 end
 else
 begin
-vysl := 1;
-while a > 0 do
-begin
-vysl := vysl * a;
-a := a - 1
+write(?Faktorial nelze spocitat?#10??)
 end;
-write(?Vysledek je: ?, vysl, ??#10??)
-end
+write(?Faktorial nelze spocitat?#10??);
+write(?Faktorial nelze spocitat?#10??)
 end.

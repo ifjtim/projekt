@@ -7,7 +7,6 @@
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0
 FILE* srcfile;
-token_type token;
 //otevirani souboru
 int opensrcfile(char *filename)
 {
@@ -25,168 +24,113 @@ void closesrcfile (){
 }
 
 
-//deklarace jednotlivych znaku ktery mohou prijit
-character_type get_char_type(char ch) {
-    if ((ch == ' ') || (ch == '\n') || (ch == EOF)) {
-        return white_space;
-    } else if ((ch >= '0') && (ch <='9')) {
-        return cislo;
-    } else if ((ch == 'e') || (ch =='E')) {
-        return pismeno_e;
-    } else if ((ch == '_') || ((ch >= 'A')&& (ch<='Z')) || ((ch >= 'a') && (ch <='z'))) {
-        return pismeno;
-    } else if (ch == ';') {
-        return strednik;
-    } else if (ch == '+'){
-        return plus_znak;
-    } else if (ch == '-') {
-        return minus_znak;
-    } else if (ch == '*') {
-        return krat_znak;
-    } else if (ch == '/') {
-        return lomeno_znak;
-    } else if (ch == '>') {
-        return vetsi_znak;
-    } else if (ch == '<') {
-        return mensi_znak;
-    } else if (ch == '=') {
-        return rovno_znak;
-    } else if (ch == '’') {
-        return apostrof;
-    } else if (ch == '(') {
-        return ls_zavorka;
-    } else if (ch == ')') {
-        return ps_zavorka;
-    } else if (ch == '#') {
-        return escape;
-    } else if (ch == '.') {
-        return tecka;
-    } else if (ch == ':') {
-        return dvoj_tecka;
-    } else if (ch == '{') {
-        return ls_zavorka_kom;
-    } else if (ch == '}') {
-        return ps_zavorka_kom;
-    } else if (ch == ',') {
-        return carka;
-    } else {
-        return ostatni_znaky;
-    }
-
-}
-
-identifikator_type identifikator_compare (char *str){
-    #define begin_str "begin"
-    #define boolean_str "boolean"
-    #define do_str "do"
-    #define else_str "else"
-    #define end_str "end"
-    #define false_str "false"
-    #define find_str "find"
-    #define forward_str "forward"
-    #define function_str "function"
-    #define if_str "if"
-    #define integer_str "integer"
-    #define readln_str "readln"
-    #define real_str "real"
-    #define sort_str "sort"
-    #define string_str "string"
-    #define then_str "then"
-    #define true_str "true"
-    #define var_str "var"
-    #define while_str "while"
-    #define write_str "write"
-
-    if (strcmp(str, begin_str) == 0){
-        return begin_id;
-    }else if (strcmp(str, boolean_str) == 0){
-        return boolean_id;
-    }else if (strcmp(str, do_str) == 0){
-        return do_id;
-    }else if (strcmp(str, else_str) == 0){
-        return else_id;
-    }else if (strcmp(str, end_str) == 0){
-        return end_id;
-    }else if (strcmp(str, false_str) == 0){
-        return false_id;
-    }else if (strcmp(str, find_str) == 0){
-        return find_id;
-    }else if (strcmp(str, forward_str) == 0){
-        return forward_id;
-    }else if (strcmp(str, function_str) == 0){
-        return function_id;
-    }else if (strcmp(str, if_str) == 0){
-        return if_id;
-    }else if (strcmp(str, integer_str) == 0){
-        return integer_id;
-    }else if (strcmp(str, readln_str) == 0){
-        return readln_id;
-    }else if (strcmp(str, real_str) == 0){
-        return real_id;
-    }else if (strcmp(str, sort_str) == 0){
-        return sort_id;
-    }else if (strcmp(str, string_str) == 0){
-        return string_id;
-    }else if (strcmp(str, then_str) == 0){
-        return then_id;
-    }else if (strcmp(str, true_str) == 0){
-        return true_id;
-    }else if (strcmp(str, var_str) == 0){
-        return var_id;
-    }else if (strcmp(str, while_str) == 0){
-        return while_id;
-    }else if (strcmp(str, write_str) == 0){
-        return write_id;
-    }
-}
-//funkce prida dalsi znak do retezce
-void add_char(char *str, char ch, int *index) {
-    str[*index] = ch;
-    (*index)++;
-    str[*index] = 0;
-    return;
-}
-void remove_last_char(char *str, int *index) {
-    (*index)--;
-    str[*index] = 0;
-    return;
-}
-void id_add_char (char **str, char ch, int *index, int *pocet_1) {
-    (*str)[*index] = ch;
-    (*index)++;
-    (*str)[*index] = 0;
-    if ((*index) == ((*pocet_1)-2)){
-        *pocet_1 = (*pocet_1) + 10;
-        (*str) = realloc((*str), *pocet_1);
-    }
-
-}
-// navratova hodnota = NULL pokud je nacten cely soubor, jinak vraci ukazal na token globalni promennou
-//deklarace jednotlivych stavu v konecnem automatu
-
-// globalni promenna
-char *token_str = NULL;
-
-
 int get_token(){
-    stav_type stav = start;
-    char ch;
-    int token_index = 0;
-    int pocet = 12;
-    double number;
-    //extern char id_str [12];
-    if (token_str == NULL) {
-      token_str = (char *)malloc(pocet);
-    }
-
-    do {
+	char znak;
+	int stav;
+	while(stav!=7){
+	znak=fgetc(srcfile);
+	switch(stav)
+	{
+	case 0:
+	if(znak==' ') stav=0;// bily znak
+	if ((znak == '_') || (znak >= 'A')&& (znak<='Z')) || ((znak >= 'a') && (znak <='z')))stav=1;// id
+	if ((znak >= '0') && (znak <='9')|| ((znak >= '#')) stav=2; //cislo
+	if (znak=='{') stav=3; //komentar
+	if (znak=='>')stav=4;
+	if	 (znak=='<') stav=5;
+	if (znak=='=') return rovnase;
+	if (znak=='+') return plus;
+	if (znak=='*') return krat;
+	if	(znak=='-') return minus;
+	if (znak=='/') return deleno;
+	if	(znak=='(') return zavorkaP;
+	if	 (znak==')') return zavorkaD; 
+	if	 (znak==':') return dvojtecka;
+	if	 (znak==',')return carka;
+		 
+	if ((znak=='?')stav=6;
+	case 1:
+	 
+		 if ((znak == '_') || (znak >= 'A')&& (znak<='Z')) || ((znak >= 'a') && (znak <='z')) || (znak >= '0') && (znak <='9')) stav=1;
+		 else 
+		 {
+			 stav=0;
+			 ungetc(znak, srcfile);
+			 return id;
+			  
+		 }
+		 break;
+	case 2:
+		if ((znak >= '0') && (znak <='9')) stav=2;
+		 else
+		 {
+			 ungetc(znak, srcfile);
+			 return cislo_integer;
+		 }
+		break;
+	case 3:
+		if (znak=='}') stav=0;
+		 else stav=3;
+	case 4:
+		if(znak=='=')
+		{
+			stav=0;
+			return vetsi_nerovnase;
+		}
+		 else 
+		 {
+			  stav=0;
+			 ungetc(znak, srcfile);
+			 return vetsi;
+		 }
+		break;
+	 case 5:
+		 if(znak=='=')
+		 {
+			 stav=0;
+			 return mensi_nerovnase;
+			
+		 }
+		 if else(znak=='>')
+		 {
+			 stav=0;
+			 return nerovna;
+		 }
+		  else 
+		 {
+			  stav=0;
+			 ungetc(znak, srcfile);
+			 return mensi;
+		 }
+		 break;
+	 case 6:
+		 if(znak=='?') 
+		 {
+			 stav=0;
+			 return K_string;
+		 }
+		 else stav=6;
+		 break;
+		 
+	}
+	}	
+	return 0;
+}
+/*
+int get_token(){
+	char ch;
+	stav_type stav = start;
+do {
         if ((ch = getc(srcfile)) == EOF) {
             // jestlize se jedna o prvni cteni, tj. neni rozecten zadny token, vrati se NULL= konec zdrojoveho souboru
-            if (stav == start) {
-                return 0;
-            } else {
+					if (stav == start)
+					{
+						return 0;
+					} 
+					else
+					{
                 ungetc(ch, srcfile); // vrat eof do cteneho suboru aby se priste ukoncilo korektne nacitani zdrojoveho souboru
-            }
+					}
 
         }
         switch (stav) {
@@ -194,15 +138,15 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = cele_cislo;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case pismeno:
                     stav = identifikator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case pismeno_e:
                     stav = identifikator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case strednik:
                     return 3;
@@ -239,7 +183,7 @@ int get_token(){
                     break;
                 case escape:
                     stav = escape_stav;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case ls_zavorka_kom:
                     stav = komentar;
@@ -248,7 +192,7 @@ int get_token(){
                     stav = start;
                     break;
                 default:
-                    return EOF;
+                   stav=konec;
                     break;
                 }
             break;
@@ -289,19 +233,19 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = cele_cislo;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case tecka:
                     stav = realne_cislo;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case pismeno_e:
                     stav = cislo_e;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case plus_znak:
                     stav = cislo_operator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
                     ungetc(ch, srcfile);
@@ -312,19 +256,19 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = realne_cislo;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case pismeno_e:
                     stav = cislo_e;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                   
                     break;
                 case plus_znak:
                     stav = cislo_operator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case minus_znak:
                     stav = cislo_operator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
                     ungetc(ch, srcfile);
@@ -335,7 +279,7 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = escape_stav;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
                     ungetc(ch, srcfile);
@@ -346,7 +290,7 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case cislo:
                     stav = cislo_e;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
                     ungetc(ch, srcfile);
@@ -357,12 +301,12 @@ int get_token(){
                 switch (get_char_type(ch)) {
                 case pismeno_e:
                     stav = cislo_e;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
                     ungetc(ch, srcfile);
                     ungetc(ch, srcfile);
-                    remove_last_char(token_str, &token_index);
+                    
                     //sscanf(token_str,"%d", &(token.value.intval));
                     return 2;
                 }
@@ -370,14 +314,14 @@ int get_token(){
                 switch (get_char_type(ch)){
                 case pismeno:
                     stav = identifikator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 case pismeno_e:
                     stav = identifikator;
-                    id_add_char(token_str, ch, &token_index, &pocet);
+                    
                     break;
                 default:
-                    switch (identifikator_compare (token_str)){
+                   /* switch (identifikator_compare (token_str)){
                     case begin_id:
                         ungetc(ch, srcfile);
                         return 20;
@@ -442,7 +386,7 @@ int get_token(){
                         ungetc(ch, srcfile);
                         return 1;
                     }
-                    token.type = id;
+                   
                     break;
                 }
         case komentar:
@@ -454,32 +398,11 @@ int get_token(){
                     stav = komentar;
                     break;
                 }
+			 case konec:
+				 stav=konec;
+				 break;
         }
 
-    } while (stav != konec);
-}
-/*
-int main (int argc, char* argv[]) {
-    token_type *mytoken;
-    if (argc > 1) {
-        if (opensrcfile(argv[1]) == VALID_SRCFILE) {
-            while ((mytoken = get_token()) != NULL) {
-                switch (mytoken->type) {
-                case id:
-                    printf ("id: %s", mytoken->value.id);
-                    break;
-                case operator:
-                    printf ("operator: %i", mytoken->value.oper);
-                    break;
-                }
-
-            }
-            closesrcfile();
-        }
-     } else {
-        printf("\nChybne parametry\n");
-        return 0;
-    }
-
+    } while(stav != konec);
 }
 */

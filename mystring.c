@@ -167,13 +167,13 @@ char *copy(string *s, int i, int n)	// hmhm potreba dodelat tuto fci
   return s2.data;
 }
 
-char *strPlusStr(string *s1, string *s2)
+/*char *strPlusStr(string *s1, string *s2)
 {
   int i = strlen(s1->data);
   s2->length = strlen(s2->data);
   char *result = NULL;
   if ((result = (char *) malloc(sizeof((char)*(i+s2->length+1)))) == NULL)
-    return 'x';
+    return NULL;
   if (s1->data != NULL)
       memcpy(result, s1->data, s1->lenght);
   if (s2->data != NULL)
@@ -184,4 +184,4 @@ char *strPlusStr(string *s1, string *s2)
     }
   }
   return result;
-}
+}*/

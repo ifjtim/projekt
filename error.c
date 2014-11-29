@@ -7,49 +7,49 @@ int error(int cislo_err){
 
 		case 1:
 			smaz();
-		return 1;
+		exit(1);;
 		
 		case 2:
 			smaz();
-		return 2;
+		exit(2);
 		
 		case 3:
 			smaz();
-		return 3;
+		exit(3);
 		
 		case 4:
 			smaz();
-		return 4;
+		exit(4);
 		
 		case 5:
 			smaz();
-		return 5;
+		exit(5);
 		
 		case 6:
 			smaz();
-		return 6;
+		exit(6);
 
 		case 7:
 			smaz();
-		return 7;
+		exit(7);
 
 		case 8:
 			smaz();
-		return 8;
+		exit(8);
 
 		case 9:
 			smaz();
-		return 9;
+		exit(9);
 
 		case 99:
 			smaz();
 			printf("jede to");
-		return 99;
+		exit(99);
 		
 		default:
 			
 			printf("chybny error");
-			return 99;
+			exit(99);
 	}
 
 }

@@ -10,22 +10,22 @@
   */
 
  
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 
-typedef struct String{
+
+typedef struct {
   int length;
   char *data;
   int allocSize;
 } string;
 
 string str_g;
+
+void bLast(string *search, int *last);
+int find(string *s, string *search);
+
+char *sort(string *s);
 
 void cString(string *s1, string *p);
 

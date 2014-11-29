@@ -11,8 +11,8 @@
 
 #include "ial.h"
 #include "mystring.h"
-  #include "interpret.h"
-/*void bLast(string *search, int *last)
+#include "interpret.h"
+void bLast(string *search, int *last)
 {					// pomocna funkce find
   int ahoj = 0;
   for (int i = 0; i < 256; i++)
@@ -91,7 +91,7 @@ char *sort(string *s)
   }
   return sortstr;
 }
-*/
+
 
 struct htab_t *htab_init(int size){ //lokalni tabulka
 	struct htab_t *t;

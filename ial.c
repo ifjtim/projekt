@@ -18,7 +18,6 @@ void bLast(string *search, int *last)
   {
     ahoj = search->data[i];
     last[ahoj] = i;
-    printf("last[%c] = %d\n",search->data[i], i);
   }
 }  
 
@@ -36,7 +35,6 @@ int find(string *s, string *search)
     return -1;
   }
   do {
-    printf("i: %d\nj: %d\n", i, j); 
     if (search->data[j] == s->data[i])
     {
 	if (j == 0)
@@ -65,21 +63,25 @@ char *sort(string *s)
 {					// shell sort
   int i, j, step, tmp, n;
   n = strlen(s->data);
+  char *sortstr = NULL;
+  if ((sortstr = (char *) malloc((sizeof(char))*(n+1))) == NULL)
+    return NULL;
+  strcpy(sortstr, s->data);
   step = n/2;
   while (step > 0)
   {
     for (i = step; i < n; i++)
     {
       j = i;
-      tmp = s->data[i];
-      while (j >= step && ((int)s->data[j-step]) > tmp)
+      tmp = sortstr[i];
+      while (j >= step && ((int)sortstr[j-step]) > tmp)
       {
-	s->data[j] = s->data[j-step];
+	sortstr[j] = sortstr[j-step];
 	j -= step;
       }
-      s->data[j] = tmp;
+      sortstr[j] = tmp;
     }
     step /= 2;
   }
-  return s->data;
+  return sortstr;
 }

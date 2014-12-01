@@ -9,10 +9,14 @@
  * --------------------------------------------------
  */
 
-#include "ial.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "mystring.h"
+#include "ial.h"
 #include "interpret.h"
-void bLast(string *search, int *last)
+void bLast(string1 *search, int *last)
 {					// pomocna funkce find
   int ahoj = 0;
   for (int i = 0; i < 256; i++)
@@ -27,7 +31,7 @@ void bLast(string *search, int *last)
   }
 }  
 
-int find(string *s, string *search)
+int find(string1 *s, string1 *search)
 {					// Boyer-Mooruv alg na hledani podretezce
   int last[256];
   bLast(search, &last[0]);
@@ -65,7 +69,7 @@ int find(string *s, string *search)
   return -1;
 }
 
-char *sort(string *s)
+char *sort(string1 *s)
 {					// shell sort
   int i, j, step, tmp, n;
   n = strlen(s->data);
@@ -273,4 +277,9 @@ void htab_free(struct htab_t *t){
 	 htab_clear(t); // uvolneni všech seznamu
 	 free(t); // uvolneni cele tabulky
 	 
+}
+
+int over(char *key, int *co)
+{
+	
 }

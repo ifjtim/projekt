@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "interpret.h"
 #include "mystring.h"
@@ -35,7 +36,7 @@ int get_token(){
 	switch(stav)
 	{
 	case 0:
-	 if((znak==' ') || (znak=='\n')) stav=0;// bily znak
+	 if (isspace(znak)) stav=0;// bily znak
 	else if ((znak == '_') || ((znak >= 'A')&& (znak<='Z')) || ((znak >= 'a') && (znak <='z')))
 	{
 		stav=1;// id
@@ -119,7 +120,12 @@ int get_token(){
 			 return mensi_rovnase;
 			
 		 }
-		 
+		 else if(znak=='>')
+		 {
+			 stav=0;
+			 return nerovna;
+			
+		 }
 		  else 
 		 {
 			  stav=0;
@@ -283,6 +289,18 @@ typp porovnej()//porovna jestli je to klicove slovo
 		  strFree(&str_g);
 			strInit(&str_g);
 			return K_write;
+	 }
+	 
+	 else if (strcmp(str_g.data, "copy") == 0){
+		  strFree(&str_g);
+			strInit(&str_g);
+			return F_copy;
+	 }
+	 
+	 else if (strcmp(str_g.data, "leight") == 0){
+		  strFree(&str_g);
+			strInit(&str_g);
+			return F_leight;
 	 }
 	 
 	 else return id;

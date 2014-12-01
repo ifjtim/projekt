@@ -1,6 +1,17 @@
 	#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "interpret.h"
-#include "ial.h"
+
+#include "mystring.h"
+
+void smaz()
+	{
+		//printf("smazS");
+		/*htab_free(t);                                    //uvolneni tabuky
+		htab_clear(t);*/
+	}
 
 int error(int cislo_err){
 	switch (cislo_err) {	
@@ -64,9 +75,4 @@ int error(int cislo_err){
 
 }
 
-void smaz()
-	{
-		printf("smazS");
-		/*htab_free(t);                                    //uvolneni tabuky
-		htab_clear(t);*/
-	}
+

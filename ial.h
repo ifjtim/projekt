@@ -1,12 +1,8 @@
-  
-#include <string.h>  
-#include <stdio.h>
-#include <stdlib.h>
 
+void bLast(string1 *search, int *last);
+int find(string1 *s, string1 *search);
 
-
-
-
+char *sort(string1 *s);
 
 
 

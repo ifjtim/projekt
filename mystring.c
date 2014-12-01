@@ -9,12 +9,14 @@
   *	panove
   */
 
- 
+ #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "mystring.h"
 #include "ial.h"
 
 
-void cString(string *s1, string *p)
+void cString(string1 *s1, string1 *p)
 {
   int lenp = strlen(p->data);
   char ascii = 0;
@@ -86,7 +88,7 @@ void cString(string *s1, string *p)
   }
 }
 
-int strAddChar(string *s1, char c)
+int strAddChar(string1 *s1, char c)
 {
    if (s1->length + 1 >= s1->allocSize)
    {
@@ -100,7 +102,7 @@ int strAddChar(string *s1, char c)
    return 1;
 }
 
-int strInit(string *s)
+int strInit(string1 *s)
 {
    if ((s->data = (char*) malloc(8)) == NULL)
       error(99);
@@ -110,23 +112,23 @@ int strInit(string *s)
    return 1;
 }
 
-void clearStr(string *s)
+void clearStr(string1 *s)
 {
   s->data[0] = '\0';
   s->length = 0;
 }
 
-void strFree(string *s)
+void strFree(string1 *s)
 {
    free(s->data);
 }
 
-int length(string *s)
+int length(string1 *s)
 {
   return s->length;
 }
 
-char *copy(string *s, int i, int n)	// hmhm potreba dodelat tuto fci
+char *copy(string1 *s, int i, int n)	// hmhm potreba dodelat tuto fci
 {
   char *s2 = NULL;
   if ((s2 = (char *) malloc((sizeof(char))*(n+1))) == NULL)
@@ -150,7 +152,7 @@ char *copy(string *s, int i, int n)	// hmhm potreba dodelat tuto fci
   return s2;
 }
 
-char *strPlusStr(string *s1, string *s2)
+char *strPlusStr(string1 *s1, string1 *s2)
 {
   int i = strlen(s1->data);
   int o = strlen(s2->data);

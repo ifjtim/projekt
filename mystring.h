@@ -18,23 +18,20 @@ typedef struct {
   int length;
   char *data;
   int allocSize;
-} string;
+} string1;
 
-string str_g;
+string1 str_g;
 
-void bLast(string *search, int *last);
-int find(string *s, string *search);
 
-char *sort(string *s);
 
-void cString(string *s1, string *p);
+void cString(string1 *s1, string1 *p);
 
-int strAddChar(string *s1, char c);
+int strAddChar(string1 *s1, char c);
 
-int strInit(string *s);
-void clearStr(string *s);
-void strFree(string *s);
-int length(string *s);
+int strInit(string1 *s);
+void clearStr(string1 *s);
+void strFree(string1 *s);
+int length(string1 *s);
 
-char *copy(string *s, int i, int n);
-char *strPlusStr(string *s1, string *s2);
+char *copy(string1 *s, int i, int n);
+char *strPlusStr(string1 *s1, string1 *s2);

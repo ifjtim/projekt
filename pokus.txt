@@ -12,7 +12,22 @@ write(?Faktorial nelze spocitat?#10??)
 end
 else
 begin
+a:=leight(a);
+a:=copy(a,a,a);
 write(?Faktorial nelze spocitat?#10??)
+end;
+while a > 0 do
+begin
+write(?Faktorial nelze spocitat?#10??);
+write(?Faktorial nelze spocitat?#10??); 
+if a < 0 then
+begin
+write(?Faktorial nelze spocitat?#10??)
+end
+else
+begin
+write(?Faktorial nelze spocitat?#10??)
+end
 end;
 write(?Faktorial nelze spocitat?#10??);
 write(?Faktorial nelze spocitat?#10??)

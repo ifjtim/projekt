@@ -5,7 +5,7 @@
 
 /* DEKLARACE*/
 int strtoint (char * S1);
-float strtofloat(char *S1);
+double strtofloat(char *S1);
 
 /* STRING TO INT*/
 int strtoint (char * S1)
@@ -23,23 +23,23 @@ int strtoint (char * S1)
 }
 
 
-/*STRING TO FLOAT*/
-float strtofloat(char *S1)
+/*STRING TO DOUBLE*/
+double strtofloat(char *S1)
 
 {
 
     char *stopstring;
-    float b;
+    double b;
 
-    b = strtof(S1,&stopstring);
+    b = strtod(S1,&stopstring);
 
     return b;
 }
 
 
 
-
 /*MAIN*/
+/*
 int main()
 {
     char s1[]=  "785";
@@ -47,12 +47,12 @@ int main()
 
         printf("final res:%d\n",a); //volani me funkce
 
-    char s2[]=  "7.85";
-    float c=strtofloat(s2);//volani me funkce
+    char s2[]=  "6.6464648289405";
+    double c=strtofloat(s2);//volani me funkce
 
         printf("final res:%f\n",c);
 
     return 0;
 }
-
+*/
 

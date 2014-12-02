@@ -1,10 +1,11 @@
-PRJ=error.o interpret.o ial.o lexana.o  mystring.o  paser.o
+	
+CFLAGS=-std=c99 -Wall -pedantic -g
+BIN=interpret
 CC=gcc
-CFLAGS=-Wall -std=c99 -pedantic -lm
+RM=rm -f
 
-interpret: error.o interpret.o ial.o lexana.o  mystring.o  paser.o 
-
-	$(CC) error.o interpret.o ial.o lexana.o   mystring.o paser.o -lm -o interpret
+ALL: error.o interpret.o ial.o lexana.o  mystring.o  paser.o main.o
+	$(CC) $(CFLAGS) -o $(BIN) error.o interpret.o ial.o lexana.o  mystring.o  paser.o main.o
 
 clean:
-	$(RM)   *.o
+	$(RM) *.o $(BIN)

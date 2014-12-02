@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	
  if (argc > 1) {
         if (opensrcfile(argv[1]) == 0) { //otevøu soubor
-			  /* while(a!=konec)
+		/*	  while(a!=konec)
 				{
 			  a=get_token();  
 			 printf("%d\n",a);
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 				 strFree(&str_g);
 				 strInit(&str_g);
 			}
-			  }*/
-			  neww=1;
+			  }
+			 */neww=1;
 			c= func();
 				
 			 
@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 		printf("%s\t%u\n",kolo-> keyg,kolo->typg);
 		htab_clearg(t);
 	}*/
+//vypisg(global);
 return 0;
 }
 //zkouska

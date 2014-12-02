@@ -5,7 +5,7 @@
 #include "interpret.h"
 
 #include "mystring.h"
-
+#include "ial.h"
 void smaz()
 	{
 		//printf("smazS");
@@ -19,17 +19,18 @@ int error(int cislo_err){
 
 		case 1:
 			smaz();
-			printf("1");
+			printf("e1");
 		exit(1);
 		
 		case 2:
 			smaz();
-			printf("2");
+			printf("e2");
 		exit(2);
 		
 		case 3:
 			smaz();
-			printf("3");
+			vypisg(global);
+			printf("e3");
 		exit(3);
 		
 		case 4:

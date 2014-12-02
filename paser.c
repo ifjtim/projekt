@@ -6,6 +6,15 @@
 #include "mystring.h"
 #include "ial.h"
 
+int provertyp(){
+	
+ if(token==K_integer) {return 1; }
+ else if(token==K_real) {return 2;}
+ else if(token==K_string) {return 3;}
+ else if(token==K_boolean) {return 4;}
+ else {error(2);}
+ return 0;
+}
 
 
 void new_token()
@@ -33,8 +42,11 @@ int func()
 		new_token();
 		if(token==K_begin)// pokud zaciname begin prvidla ll
 		{ 
+			
 			sts();
+			
 			en();
+			
 			new_token();
 			if(token==tecka)//token se musi rovnat tecte
 			{
@@ -52,6 +64,7 @@ int func()
 				{
 					if((polozka=htab_lookupg(global,"1main"))==NULL) error(99);//zakladam tabulku symbolu pro funkci main a ukladam do globalni prmenne pod nayvem 1main
 					lokal=polozka->ktera;
+					lokal_lobal=lokal;
 					if((seznam=htab_lookup(lokal,(str_g.data)))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
 					strFree(&str_g);
 					strInit(&str_g);
@@ -62,12 +75,16 @@ int func()
 				{
 					if((seznam=htab_lookup(lokal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
 					 strFree(&str_g);
-				 strInit(&str_g);
+					strInit(&str_g);
 				}
 			}
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			int c=provertyp();
+			
+			htab_typ(seznam,c);
+			
 			new_token();
 			if(token!=strednik)error(2);//token se nerovna ;
 			next();
@@ -94,6 +111,8 @@ int func()
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 				type();
+			int c=provertyp();
+			htab_typg(polozka,c);
 			new_token();
 			if(token!=strednik)error(2);//token se nerovna ;
 			returnn();
@@ -105,10 +124,20 @@ int func()
 
 void type(){
 	new_token();
+	
 	if(token==K_integer){}
 	else if(token==K_real){}
-	else if(token==cislo_real){}
-	else if(token==cislo_integer){}
+	else if(token==cislo_real){
+		strFree(&str_g);
+			strInit(&str_g);
+		
+	}
+	else if(token==cislo_integer)
+	{
+		strFree(&str_g);
+			strInit(&str_g);
+		
+	}
 	else if(token==hodnota_string){}
 	else if(token==K_string){}
 	else if(token==K_boolean){}
@@ -121,23 +150,37 @@ void type(){
 }
 
 void params(){
+	//poloyki globalni urovne
+	struct htab_listitem *seznam;
 	new_token();
 	if(token==id)
 	{
+		if((seznam=htab_lookup(lokal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
+					 strFree(&str_g);
+					strInit(&str_g);
 		new_token();
 		if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 		type();
+		int c=provertyp();
+			htab_typ(seznam,c);
 		params_next();
 	}
 	else neww=2;
 }
 
 void params_next(){
+	//poloyki globalni urovne
+	struct htab_listitem *seznam;
 	new_token();
 	if(token==id)
-	{ 
+	{ if((seznam=htab_lookup(lokal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
+					 strFree(&str_g);
+					strInit(&str_g);
+		
 		new_token();
-		if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
+		if(token!=dvojtecka)error(2);
+		int c=provertyp();
+			htab_typ(seznam,c);//token se nerona se dvijtecka
 		type();
 		params_next();
 		
@@ -147,6 +190,8 @@ void params_next(){
 }
 void returnn()
 {
+	
+	struct htab_listitem *seznam;
 	new_token();
 	if(token==K_forward)
 	{ 
@@ -166,6 +211,7 @@ void returnn()
 			if(token!=id)error(2);//pokud se nerovna id
 			else
 			{
+					 if((seznam=htab_lookup(lokal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
 					 strFree(&str_g);
 					strInit(&str_g);	
 			}
@@ -173,6 +219,8 @@ void returnn()
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			int c=provertyp();
+			htab_typ(seznam,c);
 			new_token();
 			if(token!=strednik)error(2);//token se nerovna ;
 			next();
@@ -218,6 +266,7 @@ void sts(){
 	new_token();
 	if(token==id)
 	{
+		//int g=over(str_g.data,lokal);
 		strFree(&str_g);
 		strInit(&str_g);
 		new_token();
@@ -277,12 +326,14 @@ void sts(){
 	}
 	/*pokud je token write klicove slovo*/
 	else if(token==K_write){
+		
 		new_token();
 		if(token!=zavorkaP)error(2);
 		type();
 		rite();
 		new_token();
 		if(token!=zavorkaD)error(2);
+	
 	}
 	else {neww=2;}
 }
@@ -371,6 +422,9 @@ void next()//opravit
 				new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			int c=provertyp();
+			
+			htab_typ(seznam,c);
 			new_token();
 			if(token!=strednik)error(2);//token se nerovna ;
 			
@@ -386,8 +440,7 @@ void en()
 			new_token();
 			if(token==K_end)
 			{
-				
-				
+
 				konec=1;
 			}
 			else if(token==strednik){ sts();}
@@ -413,4 +466,4 @@ void  prediktiv(){
 	}
 	neww=2;
 	
-}		
+}	

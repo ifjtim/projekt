@@ -279,7 +279,64 @@ void htab_free(struct htab_t *t){
 	 
 }
 
-int over(char *key, int *co)
+int over(char *k,struct htab_t *t)
 {
+	
+struct htab_listitem *seznam;
+
+	unsigned int pozice=hash_function(k,t->htable_size); // ziskani ktere seznamu bude zapisovane(ktere ptr)
+	seznam=t->ptr[pozice];
+
+		while(seznam!=NULL){// projeti celeho seznamu
+		if(strcmp(k,seznam->key)==0) //hledani schodz kli4u
+			return seznam->typ;
+		else 
+			seznam=seznam->next; 
+	}
+	if(t!=lokal_lobal){
+			t=lokal_lobal;
+			seznam=t->ptr[pozice];
+
+		while(seznam!=NULL){// projeti celeho seznamu
+		if(strcmp(k,seznam->key)==0) //hledani schodz kli4u
+			return seznam->typ;
+		else 
+			seznam=seznam->next; 
+		}
+	}
+	error(3);
+	return 0;
+}
+void vypis(struct htab_t *t){
+	struct htab_listitem *seznam, *pomocna;
+	
+	 for(unsigned int pocet=0;pocet<t->htable_size;pocet++){ // projeti všech seznamu v tabulce
+			seznam=t->ptr[pocet]; // natčeni prvniho prvku
+		while(seznam!=NULL){ // projeti celeho seznamu
+			pomocna=seznam->next; // zapamotovani pristiho
+			printf("%s ", seznam->key);// uvolneni pro slovo
+			printf("%d\n", seznam->typ);//uvolni aktualniho seznamu
+			seznam=pomocna;//nahrani pristiho seznamu
+		}
+		// vynulovani ptr
+	}
+	
+}
+
+void vypisg(struct htab_global *t){
+	struct htab_listglobal *seznam, *pomocna;
+	
+	 for(unsigned int pocet=0;pocet<t->htable_global;pocet++){ // projeti všech seznamu v tabulce
+			seznam=t->ptrg[pocet]; // natčeni prvniho prvku
+		while(seznam!=NULL){ // projeti celeho seznamu
+			pomocna=seznam->nextg; // zapamotovani pristiho
+			printf("%s ", seznam->keyg);// uvolneni pro slovo
+			printf("%d\n", seznam->typg);
+			vypis(seznam->ktera);//uvolni aktualniho seznamu
+			seznam=pomocna;//nahrani pristiho seznamu
+		}
+		}
+		
+		
 	
 }

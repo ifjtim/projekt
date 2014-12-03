@@ -125,20 +125,28 @@ int func()
 void type(){
 	new_token();
 	
-	if(token==K_integer){}
+	if(token==K_integer){
+		
+	}
 	else if(token==K_real){}
 	else if(token==cislo_real){
 		strFree(&str_g);
 			strInit(&str_g);
+			//printf(" d%f ", vysldouble);
 		
 	}
 	else if(token==cislo_integer)
 	{
 		strFree(&str_g);
-			strInit(&str_g);
+		strInit(&str_g);
+		//printf(" i%d ", vysledek);
 		
 	}
-	else if(token==hodnota_string){}
+	else if(token==hodnota_string){
+		//printf(" s%s ",str_g.data);
+		strFree(&str_g);
+		strInit(&str_g);
+	}
 	else if(token==K_string){}
 	else if(token==K_boolean){}
 	else if(token==id)
@@ -263,10 +271,20 @@ void op()
 	
 }
 void sts(){
+	int g=0;
 	new_token();
 	if(token==id)
 	{
-		//int g=over(str_g.data,lokal);
+		g=proverfukci();
+		if(g==0){
+			g=over(str_g.data,lokal);
+			if(g==0)
+			{
+				
+				g=gover(str_g.data);
+				if(g==0) error(3);	
+			}
+		}
 		strFree(&str_g);
 		strInit(&str_g);
 		new_token();
@@ -455,15 +473,28 @@ void  prediktiv(){
 	while(token!=K_end && token!=strednik){
 		new_token();
 		//printf("%d",token);
-		if(token==id)
-			{
+		
 				//printf("mayu");
 				
 				strFree(&str_g);
 				strInit(&str_g);
-			}
+			
 		
 	}
 	neww=2;
 	
 }	
+
+int proverfukci(){
+struct htab_listglobal *seznam, *pomocna;
+	
+	 for(unsigned int pocet=0;pocet<global->htable_global;pocet++){ // projeti všech seznamu v tabulce
+			seznam=global->ptrg[pocet]; // natčeni prvniho prvku
+		while(seznam!=NULL){ // projeti celeho seznamu
+			pomocna=seznam->nextg; // zapamotovani pristiho
+			if(strcmp(str_g.data,seznam->keyg)==0) return 1;
+			seznam=pomocna;//nahrani pristiho seznamu
+		}	
+	 }
+	 return 0;
+}

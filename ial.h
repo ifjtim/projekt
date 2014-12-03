@@ -1,17 +1,15 @@
-
-void bLast(string1 *search, int *last);
-int find(string1 *s, string1 *search);
-
-char *sort(string1 *s);
-
-
-
+#ifndef IAL_H
+#define IAL_H
 #define VELIKOST 127
 #define POCET 16381
 #include<stdbool.h>
 
 #define FALSE 0
 #define TRUE 1
+void bLast(string1 *search, int *last);
+int find(string1 *s, string1 *search);
+
+char *sort(string1 *s);
 
 int error(int cislo_err);
 
@@ -27,6 +25,7 @@ struct htab_listitem{  // struktura pro tabulku znaku key je jmeno idefikatora
 char *key;
 unsigned int typ;
 Tco  hodnota;
+bool deklarr;
 struct htab_listitem *next;
 };
 
@@ -58,6 +57,7 @@ struct htab_listglobal{  // struktura pro tabulku znaku key je jmeno idefikatora
 char *keyg;
 unsigned int typg;
 struct htab_t *ktera;
+bool deklar;
 //tList *adres;// zacatek seynamu instrukci 
 struct htab_listglobal *nextg;
 };
@@ -71,6 +71,7 @@ struct htab_t *lokal_lobal;
 
 void smaz();
 int over(char *k,struct htab_t *t);
+int gover(char *k);
 struct htab_global *htab_initg(int size);
 struct htab_listglobal * htab_lookupg(struct htab_global *t, const char *key); //vloženi id
 void htab_typg(struct htab_listglobal *seznam,int typ);                  //vlozeni typu
@@ -85,3 +86,4 @@ void htab_clear(struct htab_t *t);   //uvoleneni seynamu
 unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funkce
 void vypis(struct htab_t *t);
 void vypisg(struct htab_global *t);
+#endif

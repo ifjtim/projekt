@@ -7,6 +7,7 @@
 #include "ial.h"
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0
+string1 pomoc,term;
 FILE* srcfile;
 //otevirani souboru
 	int opensrcfile(char *filename)
@@ -15,6 +16,7 @@ FILE* srcfile;
 		if (srcfile == NULL)
 		{
 			printf("\nSoubor %s neexistuje \n",filename);
+			error(99);
 			return INVALID_SRCFILE;
 		}
 	return VALID_SRCFILE;
@@ -24,11 +26,14 @@ FILE* srcfile;
 	return;	
 	}
 	int get_token(){
-		int znak,pomoc,pomoc2;
+	int znak,pomoc0,pomoc2;
 	int stav=0;
-		typp co;
+	typp co;
+	
+	
 		while(stav!=8){
 		znak=fgetc(srcfile);
+		
 		switch(stav)
 		{	
 			case 0:
@@ -38,7 +43,12 @@ FILE* srcfile;
 						stav=1;// id
 						strAddChar(&str_g,znak);
 				}
-				else if ((znak >= '0') && (znak <='9')) stav=2; //cislo dodelej cislo predavani cisla
+				else if ((znak >= '0') && (znak <='9'))
+				{
+					stav=2;
+					strAddChar(&str_g,znak);
+					strAddChar(&pomoc,znak);
+				}//cislo dodelej cislo predavani cisla
 				else if (znak=='{') stav=3; //komentar
 				else if (znak=='>')stav=4;
 				else if	(znak=='<') stav=5;
@@ -58,7 +68,12 @@ FILE* srcfile;
 					stav=8;
 					return konec;
 				}
-				else if (znak=='?') stav=6;
+				else if (znak=='\'')
+				{
+					
+					stav=6;
+					strAddChar(&term,znak);
+				}
 				else if (znak == '#') stav=2;
 				else error(1);
 				break;
@@ -79,33 +94,56 @@ FILE* srcfile;
 			break;
 				/*kdyz je to cislo*/
 				case 2:
-					if ((znak >= '0') && (znak <='9')) stav=2;
-					else if(znak=='.') stav=9;
+					if ((znak >= '0') && (znak <='9'))
+					{
+						strAddChar(&str_g,znak);
+						strAddChar(&pomoc,znak);
+						stav=2;
+					}
+					else if(znak=='.')
+					{
+						strAddChar(&str_g,znak);
+						strFree(&pomoc);
+							strInit(&pomoc);
+						
+						stav=9;
+					}
 					else if((znak=='+') || (znak=='-')) //poze tyto znaki ukoncuji literar ciselny 
 					{
 							stav=14;
-							pomoc=znak;
+							strAddChar(&pomoc,znak);
+							pomoc0=znak;
 					}
 					else if((znak=='e') || (znak=='E'))
 					{
 						stav=13;
+						strAddChar(&pomoc,znak);
 					}
 					else if((znak=='*')||(znak=='/')||(znak=='(')||(znak==')')||(znak==';')) //poze tyto znaki ukoncuji literar ciselny
 					{
 							stav=0;
 							ungetc(znak, srcfile);
+							strtoint (str_g.data);
+							strFree(&pomoc);
+							strInit(&pomoc);
 							return cislo_integer;
 					}
 					else if((znak=='{')||(znak=='<')||(znak=='>')||(znak==',')||(znak=='=')||(znak==':')) //poze tyto znaki ukoncuji literar ciselny
 					{
 								stav=0;
 							ungetc(znak, srcfile);
+							strtoint (str_g.data);
+							strFree(&pomoc);
+							strInit(&pomoc);
 							return cislo_integer;
 					}
 					else if (isspace(znak)) //poze tyto znaki ukoncuji literar ciselny
 					{
 						stav=0;
 						ungetc(znak, srcfile);
+						strtoint (str_g.data);
+						strFree(&pomoc);
+							strInit(&pomoc);
 						return cislo_integer;
 					}
 					else
@@ -153,45 +191,58 @@ FILE* srcfile;
 				break;
 				//je to retezec
 				case 6:
-					if(znak=='?')
+					if(znak=='\'')
 						{
 						stav=11;
+					  strAddChar(&term,znak);
 						}
 					else if(znak=='#')
 						{
 						stav=10;
 						}
-					else stav=6;
+					else
+					{
+						strAddChar(&term,znak);
+						stav=6;
+					}
 				break;
 				case 7:
 					if ((znak >= '0') && (znak <='9')) stav=7;
 				break;
 				/*hodnota typu real*/
 				case 9:
-					if ((znak >= '0') && (znak <='9')) stav=9;
+					if ((znak >= '0') && (znak <='9'))
+					{
+						strAddChar(&str_g,znak);
+						stav=9;
+					}
 					else if((znak=='+') || (znak=='-')) 
 					{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							strtofloat(str_g.data);
+							return cislo_real;
 					}
 					else if((znak=='*')||(znak=='/')||(znak=='(')||(znak==')')||(znak==';'))
 					{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							strtofloat(str_g.data);
+							return cislo_real;
 					}
 					else if((znak=='{')||(znak=='<')||(znak=='>')||(znak==',')||(znak=='=')||(znak==':')) 
 					{
 								stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							strtofloat(str_g.data);
+							return cislo_real;
 					}
 					else if (isspace(znak))
 					{
 						stav=0;
 						ungetc(znak, srcfile);
-						return cislo_integer;
+						strtofloat(str_g.data);
+						return cislo_real;
 					}
 					else
 					{
@@ -200,7 +251,7 @@ FILE* srcfile;
 					break;
 					case 10:
 						if ((znak >= '0') && (znak <='9')) stav=10;
-						if(znak=='?')
+						if(znak=='\'')
 						{
 						stav=0;
 						return hodnota_string;//udelej prechod kuba ho mozna ma
@@ -209,49 +260,72 @@ FILE* srcfile;
 					break;
 					case 11:
 						if(znak=='#')
+						{
 						stav=12;
+						strAddChar(&term,znak);
+						}
 						else
 						{
 						stav=0;
+						
 						ungetc(znak, srcfile);
+						
+						//printf(" %s ",term.data);
+						//printf(" %d ",term.data[0]);
+						cString(&str_g,&term);
+						strFree(&term);
+						strInit(&term);
 						return hodnota_string;
 						}
 					break;
 					case 12:
-						if ((znak >= '0') && (znak <='9')) stav=12;
-						if(znak=='?')
+						if ((znak >= '0') && (znak <='9')) 
 						{
+							strAddChar(&term,znak);
+							stav=12;
+						}
+						if(znak=='\'')
+						{
+							strAddChar(&term,znak);
 						stav=6;
 						
 					//udelej prechod kuba ho mozna ma
 						}
 					break;
 					case 13:
-						if ((znak >= '0') && (znak <='9')) stav=13;
+						if ((znak >= '0') && (znak <='9')) 
+						{
+							strAddChar(&pomoc,znak);
+							stav=13;
+						}//over e na 0
 						else if((znak=='+') || (znak=='-')) //poze tyto znaki ukoncuji literar ciselny 
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							prevede();
+							return cislo_real;
 						}
 				
 						else if((znak=='*')||(znak=='/')||(znak=='(')||(znak==')')||(znak==';')) //poze tyto znaki ukoncuji literar ciselny
 						{
 								stav=0;
 								ungetc(znak, srcfile);
-								return cislo_integer;
+								prevede();
+								return cislo_real;
 						}
 						else if((znak=='{')||(znak=='<')||(znak=='>')||(znak==',')||(znak=='=')||(znak==':')) //poze tyto znaki ukoncuji literar ciselny
 						{
 									stav=0;
 								ungetc(znak, srcfile);
-								return cislo_integer;
+								prevede();
+								return cislo_real;
 						}
 						else if (isspace(znak)) //poze tyto znaki ukoncuji literar ciselny
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							prevede();
+							return cislo_real;
 						}
 						else
 						{
@@ -262,49 +336,64 @@ FILE* srcfile;
 						if ((znak == 'E') || (znak =='e'))
 						{
 							pomoc2=znak;
+							strAddChar(&pomoc,znak);
 							stav=15;
 						}
 						else
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							ungetc(pomoc, srcfile);
+							ungetc(pomoc0, srcfile);
+							strtoint (str_g.data);
+							strFree(&pomoc);
+							strInit(&pomoc);
 							return cislo_integer;
 						}
 					break;
 					case 15:
-						if ((znak >= '0') && (znak <='9')) stav=13;
+						if ((znak >= '0') && (znak <='9')) 
+						{
+							strAddChar(&pomoc,znak);
+							stav=13;
+						}
 						else if((znak=='+') || (znak=='-')) //poze tyto znaki ukoncuji literar ciselny 
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							prevede();
+							return cislo_real;
 						}
 				
 						else if((znak=='*')||(znak=='/')||(znak=='(')||(znak==')')||(znak==';')) //poze tyto znaki ukoncuji literar ciselny
 						{
 								stav=0;
 								ungetc(znak, srcfile);
-								return cislo_integer;
+								prevede();
+								return cislo_real;
 						}
 						else if((znak=='{')||(znak=='<')||(znak=='>')||(znak==',')||(znak=='=')||(znak==':')) //poze tyto znaki ukoncuji literar ciselny
 						{
 									stav=0;
 								ungetc(znak, srcfile);
-								return cislo_integer;
+								prevede();
+								return cislo_real;
 						}
 						else if (isspace(znak)) //poze tyto znaki ukoncuji literar ciselny
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							return cislo_integer;
+							prevede();
+							return cislo_real;
 						}
 						else
 						{
 							stav=0;
 							ungetc(znak, srcfile);
-							ungetc(pomoc, srcfile);
+							ungetc(pomoc0, srcfile);
 							ungetc(pomoc2, srcfile);
+							strtoint (str_g.data);
+							strFree(&pomoc);
+							strInit(&pomoc);
 							return cislo_integer;
 						}
 					break;
@@ -426,8 +515,10 @@ void prevede(){
 int jedna=0,dva=0,povol=0,povoll=0;
  int c=0;
 int x=0;
-for (x=0;x<strlen(str_g.data);x++){
-c=(str_g.data)[x];
+for (x=0;x<strlen(pomoc.data);x++){
+
+c=(pomoc.data)[x];
+
 if((c=='e' )|| (c=='E') || (c=='+' ))
 {
 	povol=1;
@@ -453,26 +544,27 @@ jedna=jedna+c;
 }
 
 }
+
 if(povoll==3)
 {
 	prevedfloat(jedna,dva);
 }
 else prevedint(jedna,dva);
 
-strFree(&str_g);
-strInit(&str_g);
+strFree(&pomoc);
+strInit(&pomoc);
 }
 
 void prevedfloat(int jedna, int dva)
 {
-	float v=1,t=0.001;
+	float v=1;
 	for(int a=0;a<dva;a++){
 
 	v=v*jedna;
 }
 v=1/v;
-printf(" v%f ",v);
-printf(" v%f ",t);
+vysldouble=v;
+
 }
 
 void prevedint(int jedna, int dva)
@@ -482,5 +574,26 @@ void prevedint(int jedna, int dva)
 
 	v=v*jedna;
 }
-printf(" v%d ",v);
+vysledek=v;
 }
+
+void strtoint (char * S1)
+{
+	int c=0;
+	int x=0;
+	int v=0;
+	for (x=0;x<strlen(S1);x++){
+		c=S1[x]-'0';//aktualní char na int
+		v=v*10; //dekadicky posun
+		v=v+c;
+	}
+	 vysledek=v;
+}
+
+	void strtofloat(char *S1)
+	{
+		char *stopstring;
+		double b;
+		b = strtod(S1,&stopstring);
+		vysldouble=b;
+	}

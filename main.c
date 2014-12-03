@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[])
 {
-	typp a=nic;
+	//typp a=nic;
 	int c;
 	strInit(&str_g);
 	if((global=htab_initg(POCET))==NULL)
@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 			  }
 			 */neww=1;
 			c= func();
+			if(c!=0)
+				error(9);
 				
 			 
 		  }

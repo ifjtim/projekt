@@ -5,3 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+void neco()
+{
+	//struct TreAdres t;
+}

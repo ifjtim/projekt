@@ -293,18 +293,27 @@ struct htab_listitem *seznam;
 		else 
 			seznam=seznam->next; 
 	}
-	if(t!=lokal_lobal){
-			t=lokal_lobal;
-			seznam=t->ptr[pozice];
+	
+	
+	
+	return 0;
+}
+int gover(char *k){
+	
+	struct htab_listitem *seznam;
+
+	unsigned int pozice=hash_function(k,lokal_lobal->htable_size); // ziskani ktere seznamu bude zapisovane(ktere ptr)
+	seznam=lokal_lobal->ptr[pozice];
 
 		while(seznam!=NULL){// projeti celeho seznamu
 		if(strcmp(k,seznam->key)==0) //hledani schodz kli4u
 			return seznam->typ;
 		else 
 			seznam=seznam->next; 
-		}
 	}
-	error(3);
+	
+	
+	
 	return 0;
 }
 void vypis(struct htab_t *t){

@@ -29,13 +29,13 @@ int error(int cislo_err){
 		
 		case 3:
 			smaz();
-			vypisg(global);
+			
 			printf("e3");
 		exit(3);
 		
 		case 4:
 			smaz();
-			printf("4");
+			printf("e4");
 		exit(4);
 		
 		case 5:
@@ -60,7 +60,7 @@ int error(int cislo_err){
 
 		case 9:
 			smaz();
-			printf("9");
+			printf("e9");
 		exit(9);
 
 		case 99:

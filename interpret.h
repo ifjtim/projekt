@@ -66,5 +66,8 @@ void returnn();
 void en();
 void  prediktiv();
 int proverfukci();
+void zapisstring();
+void zapisint();
+void zapisreal();
 
 #endif

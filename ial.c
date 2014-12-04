@@ -106,6 +106,7 @@ struct htab_t *htab_init(int size){ //lokalni tabulka
 	 t->ptr[i]=NULL;
  }
  t->htable_size = size;
+ t->nahradni=0;
  return t;// vraci odkaz na tabulku
 }
 
@@ -340,7 +341,7 @@ void vypisg(struct htab_global *t){
 		while(seznam!=NULL){ // projeti celeho seznamu
 			pomocna=seznam->nextg; // zapamotovani pristiho
 			printf("%s ", seznam->keyg);// uvolneni pro slovo
-			printf("%d\n", seznam->typg);
+			printf("%d\n\n", seznam->typg);
 			vypis(seznam->ktera);//uvolni aktualniho seznamu
 			seznam=pomocna;//nahrani pristiho seznamu
 		}

@@ -34,4 +34,5 @@ int length(string1 *s);
 
 char *copy(string1 *s, int i, int n);
 char *strPlusStr(string1 *s1, string1 *s2);
+void prevodint(int velikost,string1 *s);
 #endif

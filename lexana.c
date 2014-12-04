@@ -553,6 +553,8 @@ else prevedint(jedna,dva);
 
 strFree(&pomoc);
 strInit(&pomoc);
+strFree(&str_g);
+strInit(&str_g);
 }
 
 void prevedfloat(int jedna, int dva)

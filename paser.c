@@ -33,8 +33,8 @@ void new_token()
 
 int func()
 {
+
 	int ok=1;
-	int loki=0;
 	struct htab_listglobal *polozka;//poloyki globalni urovne
 	struct htab_listitem *seznam; //polozki lokani urovne
 	while(ok==1)
@@ -42,7 +42,7 @@ int func()
 		new_token();
 		if(token==K_begin)// pokud zaciname begin prvidla ll
 		{ 
-			
+			lokal=lokal_lobal;
 			sts();
 			
 			en();
@@ -60,23 +60,11 @@ int func()
 			if(token!=id)error(2);//pokud se nerovna id
 			else
 			{
-				if(loki==0)// pokud je globalni var tak je to pro main a musim zalozit tabulku pro funkci main
-				{
-					if((polozka=htab_lookupg(global,"1main"))==NULL) error(99);//zakladam tabulku symbolu pro funkci main a ukladam do globalni prmenne pod nayvem 1main
-					lokal=polozka->ktera;
-					lokal_lobal=lokal;
-					if((seznam=htab_lookup(lokal,(str_g.data)))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
-					strFree(&str_g);
-					strInit(&str_g);
-					loki=1;
-					
-				}
-				else
-				{
-					if((seznam=htab_lookup(lokal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
+
+					if((seznam=htab_lookup(lokal_lobal,str_g.data))==NULL) error(99);// ukladam do lokalni tabulkz symbolu data
 					 strFree(&str_g);
 					strInit(&str_g);
-				}
+				
 			}
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
@@ -91,7 +79,6 @@ int func()
 		}
 		else if(token==K_function)//pokud se rovna func
 		{	
-			loki=1;
 			new_token();
 			if(token!=id)//musi rovnat id
 			{
@@ -99,9 +86,11 @@ int func()
 			}
 			else{
 						if((polozka=htab_lookupg(global,(str_g.data)))==NULL) error(99);//vlozeni jmeno fukce
+						if((seznam=htab_lookup(lokal_lobal,(str_g.data)))==NULL) error(99);
 						strFree(&str_g);
 						strInit(&str_g);
 						lokal=polozka->ktera;
+						pomo=lokal;
 			}
 			new_token();
 			if(token!=zavorkaP)error(2);//musi rovnat(
@@ -113,6 +102,7 @@ int func()
 				type();
 			int c=provertyp();
 			htab_typg(polozka,c);
+			htab_typ(seznam,c);
 			new_token();
 			if(token!=strednik)error(2);//token se nerovna ;
 			returnn();
@@ -123,6 +113,7 @@ int func()
 }
 
 void type(){
+	
 	new_token();
 	
 	if(token==K_integer){
@@ -130,22 +121,18 @@ void type(){
 	}
 	else if(token==K_real){}
 	else if(token==cislo_real){
-		strFree(&str_g);
-			strInit(&str_g);
-			//printf(" d%f ", vysldouble);
+		zapisreal();//oprav z e
 		
 	}
 	else if(token==cislo_integer)
 	{
-		strFree(&str_g);
-		strInit(&str_g);
+		zapisint();
 		//printf(" i%d ", vysledek);
 		
 	}
 	else if(token==hodnota_string){
-		//printf(" s%s ",str_g.data);
-		strFree(&str_g);
-		strInit(&str_g);
+	zapisstring();	
+	
 	}
 	else if(token==K_string){}
 	else if(token==K_boolean){}
@@ -487,7 +474,6 @@ void  prediktiv(){
 
 int proverfukci(){
 struct htab_listglobal *seznam, *pomocna;
-	
 	 for(unsigned int pocet=0;pocet<global->htable_global;pocet++){ // projeti všech seznamu v tabulce
 			seznam=global->ptrg[pocet]; // natčeni prvniho prvku
 		while(seznam!=NULL){ // projeti celeho seznamu
@@ -497,4 +483,66 @@ struct htab_listglobal *seznam, *pomocna;
 		}	
 	 }
 	 return 0;
+}
+
+void prevodint(int velikost,string1 *s){
+	
+	int pocet;
+	pocet=velikost/10 +1;
+	if ((s->data = (char*) malloc((sizeof(char))*(pocet+1))) == NULL) error(99);
+	
+	sprintf(s->data, "%i", velikost); 
+}
+
+void zapisstring(){
+	string1 key,pom;
+	struct htab_listitem *seznam;
+	
+	prevodint(lokal->nahradni,&key);
+	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
+	lokal->nahradni=lokal->nahradni+1;
+	seznam->hodnota.stringer=str_g;
+	pom=seznam->hodnota.stringer;
+	htab_typ(seznam,3);
+	seznam->deklarr=TRUE;
+	printf(" %s ",pom.data);
+		strFree(&str_g);
+		strInit(&str_g);
+	
+}
+
+void zapisint(){
+	string1 key;
+	int pom;
+	struct htab_listitem *seznam;
+	
+	prevodint(lokal->nahradni,&key);
+	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
+	lokal->nahradni=lokal->nahradni+1;
+	seznam->hodnota.inger=vysledek;
+	pom=seznam->hodnota.inger;
+	htab_typ(seznam,1);
+	seznam->deklarr=TRUE;
+	printf(" %d ",pom);
+		strFree(&str_g);
+		strInit(&str_g);
+	
+}
+
+void zapisreal(){
+	string1 key;
+	double pom;
+	struct htab_listitem *seznam;
+	
+	prevodint(lokal->nahradni,&key);
+	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
+	lokal->nahradni=lokal->nahradni+1;
+	seznam->hodnota.dvouger=vysldouble;
+	pom=seznam->hodnota.dvouger;
+	htab_typ(seznam,2);
+	seznam->deklarr=TRUE;
+	printf(" %f ",pom);
+		strFree(&str_g);
+		strInit(&str_g);
+	
 }

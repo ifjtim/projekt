@@ -45,6 +45,7 @@ typedef struct {
 
 struct htab_t{
 unsigned int htable_size;
+int nahradni;
 struct htab_listitem *ptr[];
 };
 
@@ -66,6 +67,7 @@ struct htab_listglobal *nextg;
 struct htab_global *global;
 struct htab_t *lokal;
 struct htab_t *lokal_lobal;
+struct htab_t *pomo;
 //char *funkce;
 
 

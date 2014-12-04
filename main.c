@@ -10,11 +10,18 @@ int main(int argc, char *argv[])
 {
 	//typp a=nic;
 	int c;
+  pomo=NULL;
+	struct htab_listglobal *polozka;//poloyki globalni urovne
+	
 	strInit(&str_g);
 	if((global=htab_initg(POCET))==NULL)
 	{
 		error(99);
 	}
+	
+	if((polozka=htab_lookupg(global,"1main"))==NULL) error(99);//zakladam tabulku symbolu pro funkci main a ukladam do globalni prmenne pod nayvem 1main
+					lokal=polozka->ktera;
+					lokal_lobal=lokal;
 	
  if (argc > 1) {
         if (opensrcfile(argv[1]) == 0) { //otevøu soubor
@@ -63,7 +70,10 @@ int main(int argc, char *argv[])
 		printf("%s\t%u\n",kolo-> keyg,kolo->typg);
 		htab_clearg(t);
 	}*/
-//vypisg(global);
+vypis(lokal_lobal);
+printf("\n");
+if(pomo!=NULL)
+vypis(pomo);
 return 0;
 }
 //zkouska

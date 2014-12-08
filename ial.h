@@ -2,10 +2,9 @@
 #define IAL_H
 #define VELIKOST 127
 #define POCET 16381
-#include<stdbool.h>
-
 #define FALSE 0
 #define TRUE 1
+#include<stdbool.h>
 void bLast(string1 *search, int *last);
 int find(string1 *s, string1 *search);
 

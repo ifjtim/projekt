@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include<stdbool.h>
 #include "interpret.h"
 #include "mystring.h"
 #include "ial.h"
+
 
 int provertyp(){
 	
@@ -69,6 +70,8 @@ int func()
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			strFree(&str_g);
+		strInit(&str_g);
 			int c=provertyp();
 			
 			htab_typ(seznam,c);
@@ -100,6 +103,8 @@ int func()
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 				type();
+			strFree(&str_g);
+		strInit(&str_g);
 			int c=provertyp();
 			htab_typg(polozka,c);
 			htab_typ(seznam,c);
@@ -138,8 +143,7 @@ void type(){
 	else if(token==K_boolean){}
 	else if(token==id)
 	{ 
-		strFree(&str_g);
-		strInit(&str_g);
+		
 	}//dopis jak budes chctit id doplnit id chyba
 	else {error(2);}			
 }
@@ -156,6 +160,8 @@ void params(){
 		new_token();
 		if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		int c=provertyp();
 			htab_typ(seznam,c);
 		params_next();
@@ -177,6 +183,8 @@ void params_next(){
 		int c=provertyp();
 			htab_typ(seznam,c);//token se nerona se dvijtecka
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		params_next();
 		
 	}
@@ -214,6 +222,8 @@ void returnn()
 			new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			strFree(&str_g);
+		strInit(&str_g);
 			int c=provertyp();
 			htab_typ(seznam,c);
 			new_token();
@@ -262,8 +272,8 @@ void sts(){
 	new_token();
 	if(token==id)
 	{
-		g=proverfukci();
-		if(g==0){
+		//g=proverfukci();
+		
 			g=over(str_g.data,lokal);
 			if(g==0)
 			{
@@ -271,7 +281,7 @@ void sts(){
 				g=gover(str_g.data);
 				if(g==0) error(3);	
 			}
-		}
+		
 		strFree(&str_g);
 		strInit(&str_g);
 		new_token();
@@ -286,8 +296,12 @@ void sts(){
 	}
 	else if(token==K_while){
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		op();
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		new_token();
 		if(token!=K_do)error(2);
 		new_token();
@@ -297,8 +311,12 @@ void sts(){
 	}
 	else if(token==K_if){
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		op();
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		new_token();
 		if(token!=K_then)error(2);
 		new_token();
@@ -321,6 +339,13 @@ void sts(){
 		if(token!=id)error(2);
 		else
 		{
+				g=over(str_g.data,lokal);//proveri jestli je v lokani tabulce
+			if(g==0)
+			{
+				
+				g=gover(str_g.data);//proveri jestli je v tabulce od main
+				if(g==0) error(3);	
+			}
 			strFree(&str_g);
 			strInit(&str_g);
 		}
@@ -335,6 +360,8 @@ void sts(){
 		new_token();
 		if(token!=zavorkaP)error(2);
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		rite();
 		new_token();
 		if(token!=zavorkaD)error(2);
@@ -349,6 +376,8 @@ void rite()
 	if(token==carka)
 	{
 		type();
+		strFree(&str_g);
+		strInit(&str_g);
 		rite();
 	}
 	else neww=2;
@@ -356,52 +385,166 @@ void rite()
 
 void expr()
 {
+	int g=0;
 	new_token();
 	//printf("%d ", token);
 	if(token==K_sort)
 	{
 		
-		new_token();
-		if(token!=zavorkaP)error(2);
-		type();
-		
-		new_token();
-		if(token!=zavorkaD)error(2);
+			new_token();
+			if(token!=zavorkaP)error(2);
+			type();
+				if((token==id))
+				{
+					g=over(str_g.data,lokal);
+					if(g==0)
+					{
+						
+						g=gover(str_g.data);
+						if(g!=3) error(4);	
+					}
+					else if(g==3){}
+					else error(4);
+				}
+				else if(token== hodnota_string){}
+				else error(4);
+				strFree(&str_g);
+				strInit(&str_g);
+			new_token();
+			if(token!=zavorkaD)error(2);
 		
 	}
 	else if(token==F_copy)
 	{
-		new_token();
-		if(token!=zavorkaP)error(2);
-		type();
-		new_token();
-		if(token!=carka)error(2);
-		type();
-		new_token();
-		if(token!=carka)error(2);
-		type();
-		new_token();
-		if(token!=zavorkaD)error(2);
+				new_token();
+				if(token!=zavorkaP)error(2);
+				type();
+				if((token==id))
+					{
+						
+						g=over(str_g.data,lokal);
+					
+						if(g==0)
+						{
+							
+							g=gover(str_g.data);
+							if(g!=3) error(4);	
+						}
+						else if(g==3){}
+						else error(4);
+					}
+					else if(token== hodnota_string){}
+					else error(4);
+					strFree(&str_g);
+					strInit(&str_g);
+				new_token();
+				if(token!=carka)error(2);
+				type();
+				if((token==id))
+					{
+						g=over(str_g.data,lokal);
+						if(g==0)
+						{
+							
+							g=gover(str_g.data);
+							if(g!=1) error(4);	
+						}
+						else if(g==1){}
+						else error(4);
+					}
+					else if(token== cislo_integer){}
+					else error(4);
+					strFree(&str_g);
+					strInit(&str_g);
+				new_token();
+				if(token!=carka)error(2);
+				type();
+				if((token==id))
+					{
+						g=over(str_g.data,lokal);
+						if(g==0)
+						{
+							
+							g=gover(str_g.data);
+							if(g!=1) error(4);	
+						}
+						else if(g==1){}
+						else error(4);
+					}
+					else if(token== cislo_integer){}
+					else error(4);
+					strFree(&str_g);
+					strInit(&str_g);
+				new_token();
+				if(token!=zavorkaD)error(2);
 	}
 	else if(token==F_leight)
 	{
-		new_token();
-		if(token!=zavorkaP)error(2);
-		type();
-		new_token();
-		if(token!=zavorkaD)error(2);
+					new_token();
+					if(token!=zavorkaP)error(2);
+					type();
+					if((token==id))
+						{
+							g=over(str_g.data,lokal);
+							if(g==0)
+							{
+								
+								g=gover(str_g.data);
+								if(g!=3) error(4);	
+							}
+							else if(g==3){}
+							else error(4);
+						}
+						else if(token== hodnota_string){}
+						else error(4);
+						strFree(&str_g);
+						strInit(&str_g);
+					new_token();
+					if(token!=zavorkaD)error(2);
 	}
 	
 		else if(token==K_find)
-	{
-		new_token();
-		if(token!=zavorkaP)error(2);
-		type();
-		new_token();
-		if(token!=carka)error(2);
-		type();
-		new_token();
-		if(token!=zavorkaD)error(2);
+		{
+			new_token();
+			if(token!=zavorkaP)error(2);
+			type();
+			if((token==id))
+				{
+					g=over(str_g.data,lokal);
+					if(g==0)
+					{
+						
+						g=gover(str_g.data);
+						if(g!=3) error(4);	
+					}
+					else if(g==3){}
+					else error(4);
+				}
+				else if(token== hodnota_string){}
+				else error(4);
+				strFree(&str_g);
+			strInit(&str_g);
+			new_token();
+			if(token!=carka)error(2);
+			type();
+			if((token==id))
+				{
+					g=over(str_g.data,lokal);
+					if(g==0)
+					{
+						
+						g=gover(str_g.data);
+						if(g!=3) error(4);	
+					}
+					else if(g==3){}
+					else error(4);
+				}
+				else if(token== hodnota_string){}
+				else error(4);
+				strFree(&str_g);
+				strInit(&str_g);
+			new_token();
+			if(token!=zavorkaD)error(2);
 	}
 	
 	
@@ -427,6 +570,8 @@ void next()//opravit
 				new_token();
 			if(token!=dvojtecka)error(2);//token se nerona se dvijtecka
 			type();
+			strFree(&str_g);
+		strInit(&str_g);
 			int c=provertyp();
 			
 			htab_typ(seznam,c);
@@ -448,7 +593,14 @@ void en()
 
 				konec=1;
 			}
-			else if(token==strednik){ sts();}
+			else if(token==strednik){ 
+				new_token();
+				if(token==K_end) error(2); //kvuli kontrole ze pred end neni ;
+				else neww =2;
+				sts();
+				
+				
+			}
 			else {error(2);}
 	}
 	
@@ -457,11 +609,21 @@ void en()
 
 void  prediktiv(){
 	
+	int g;
+	
 	while(token!=K_end && token!=strednik){
 		new_token();
-		//printf("%d",token);
-		
-				//printf("mayu");
+		if(token==id)
+		{
+				g=over(str_g.data,lokal);//proveri jestli je v lokani tabulce
+			if(g==0)
+			{
+				
+				g=gover(str_g.data);//proveri jestli je v tabulce od main
+				if(g==0) error(3);	
+			}
+			
+		}
 				
 				strFree(&str_g);
 				strInit(&str_g);
@@ -495,17 +657,17 @@ void prevodint(int velikost,string1 *s){
 }
 
 void zapisstring(){
-	string1 key,pom;
+	string1 key;
 	struct htab_listitem *seznam;
 	
 	prevodint(lokal->nahradni,&key);
 	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
 	lokal->nahradni=lokal->nahradni+1;
 	seznam->hodnota.stringer=str_g;
-	pom=seznam->hodnota.stringer;
+	//pom=seznam->hodnota.stringer;
 	htab_typ(seznam,3);
 	seznam->deklarr=TRUE;
-	printf(" %s ",pom.data);
+	//printf(" %s ",pom.data);
 		strFree(&str_g);
 		strInit(&str_g);
 	
@@ -513,17 +675,17 @@ void zapisstring(){
 
 void zapisint(){
 	string1 key;
-	int pom;
+	//int pom;
 	struct htab_listitem *seznam;
 	
 	prevodint(lokal->nahradni,&key);
 	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
 	lokal->nahradni=lokal->nahradni+1;
 	seznam->hodnota.inger=vysledek;
-	pom=seznam->hodnota.inger;
+	//pom=seznam->hodnota.inger;
 	htab_typ(seznam,1);
 	seznam->deklarr=TRUE;
-	printf(" %d ",pom);
+	//printf(" %d ",pom);
 		strFree(&str_g);
 		strInit(&str_g);
 	
@@ -531,17 +693,37 @@ void zapisint(){
 
 void zapisreal(){
 	string1 key;
-	double pom;
+	//double pom;
 	struct htab_listitem *seznam;
 	
 	prevodint(lokal->nahradni,&key);
 	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
 	lokal->nahradni=lokal->nahradni+1;
 	seznam->hodnota.dvouger=vysldouble;
-	pom=seznam->hodnota.dvouger;
+	//pom=seznam->hodnota.dvouger;
 	htab_typ(seznam,2);
 	seznam->deklarr=TRUE;
-	printf(" %f ",pom);
+	//printf(" %f ",pom);
+		strFree(&str_g);
+		strInit(&str_g);
+	
+}
+
+
+
+void zapisboll(){
+	string1 key;
+	//bool  pom;
+	struct htab_listitem *seznam;
+	
+	prevodint(lokal->nahradni,&key);
+	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
+	lokal->nahradni=lokal->nahradni+1;
+	seznam->hodnota.bunger=vysldouble;
+	//pom=seznam->hodnota.bunger;
+	htab_typ(seznam,4);
+	seznam->deklarr=TRUE;
+	//printf(" %d",pom);
 		strFree(&str_g);
 		strInit(&str_g);
 	

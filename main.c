@@ -70,10 +70,10 @@ int main(int argc, char *argv[])
 		printf("%s\t%u\n",kolo-> keyg,kolo->typg);
 		htab_clearg(t);
 	}*/
-vypis(lokal_lobal);
+/*vypis(lokal_lobal);
 printf("\n");
 if(pomo!=NULL)
-vypis(pomo);
+vypis(pomo);*/
 return 0;
 }
 //zkouska

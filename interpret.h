@@ -69,5 +69,6 @@ int proverfukci();
 void zapisstring();
 void zapisint();
 void zapisreal();
+void zapisboll();
 
 #endif

@@ -5,6 +5,7 @@
 #include "interpret.h"
 #include "mystring.h"
 #include "ial.h"
+#include "lexana.h"
 #define INVALID_SRCFILE 1
 #define VALID_SRCFILE 0
 string1 pomoc,term;

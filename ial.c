@@ -107,6 +107,7 @@ struct htab_t *htab_init(int size){ //lokalni tabulka
  }
  t->htable_size = size;
  t->nahradni=0;
+ t->adres=NULL;
  return t;// vraci odkaz na tabulku
 }
 

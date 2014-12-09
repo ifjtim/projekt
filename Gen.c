@@ -3,273 +3,262 @@
 
 
 
-void plus(struct TreAdres* L)
+int pluss(struct TreAdres *L)
 {
+    int pocitadlo;
     if(L->operand1.typ == 1 && L->operand2.typ == 1)/* nadefiunovat*/
             {
-                if(L->indetifikator.typ==1)
+                if(L->indetifikator.typ == 1)
                             L->indetifikator.hodnota.inger = L->operand1.hodnota.inger+L->operand2.hodnota.inger;
-                else L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger+L->operand2->hodnota.inger;
+                else L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger+L->operand2.hodnota.inger;
 					}
-    else if(L->opernad1.typ == 1 && L->operand2.typ == 2)
-					        L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger+L->operand2->hodnota.dvouger;
+    else if(L->operand1.typ == 1 && L->operand2.typ == 2)
+					        L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger+L->operand2.hodnota.dvouger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ == 1)
-					        L->indetifikator->hodnota.dvouger=L->operand1->hodnota.dvouger+L->operand2->hodnota.inger;
+					        L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger+L->operand2.hodnota.inger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-					        L->indetifikator->hodnota.dvouger=L->operand1->hodnota.dvouger+L->operand2->hodnota.dvouger;
+					        L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger+L->operand2.hodnota.dvouger;
     else if(L->operand1.typ == 3)
 					{
-					if(strCopy3(&(L->indetifikator->hodnota.shodnota),&(L->operand1->hodnota.shodnota))==1)
-						return 99;
-					for(pocitadlo=0;pocitadlo < L->operand2->hodnota.shodnota.length;pocitadlo++)
-						{
-						if(strAddChar(&(L->indetifikator->hodnota.stringer),L->operand2->hodnota.stringer.str[pocitadlo])==1)
-							return 99;
-						}
+					strPlusStr( &L->operand1,&L->operand2);
+
+
 					}
         else return 9; /* error*/
 				/* chybí 3*/
 }
-void minus(struct TreAdres* L)
+int minuss(struct TreAdres* L)
 {
 
     if(L->operand1.typ == 1 && L->operand2.typ == 1)
 					{
 					if(L->indetifikator.typ == 1)
-                            L->indetifikator->hodnota.inger=L->operand1->hodnota.inger-L->operand2->hodnota.inger;
+                            L->indetifikator.hodnota.inger=L->operand1.hodnota.inger-L->operand2.hodnota.inger;
 
-					else L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger-L->operand2->hodnota.inger;
+					else L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger-L->operand2.hodnota.inger;
 					}
 
     else if(L->operand1.typ == 1 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger-L->operand2->hodnota.dvouger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger-L->operand2.hodnota.dvouger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.dvouger=L->operand1->hodnota.dvouger-L->operand2->hodnota.inger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger-L->operand2.hodnota.inger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.dvouger=L->oprand1->hodnota.dvouger-L->operand2->hodnota.dvouger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger-L->operand2.hodnota.dvouger;
 
         else return 9; /* error*/
 
 }
-void nasob(struct TreAdres* L)
+int nasobb(struct TreAdres* L)
 {
     if(L->operand1.typ == 1 && L->operand2.typ == 1)
 					{
 					if(L->indetifikator.typ == 1)
-                            L->indetifikator->hodnota.inger=L->operand1->hodnota.inger*L->opernad2->hodnota.inger;
+                            L->indetifikator.hodnota.inger=L->operand1.hodnota.inger*L->operand2.hodnota.inger;
 
-					else L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger*L->opernad2->hodnota.inger;
+					else L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger*L->operand2.hodnota.inger;
 					}
     else if(L->operand1.typ == 1 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.dvouger=L->operand1->hodnota.inger*L->operand2->hodnota.dvouger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.inger*L->operand2.hodnota.dvouger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.dvouger=L->operand1->hodnota.dvouger*L->operand2->hodnota.inger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger*L->operand2.hodnota.inger;
 
     else if(L->operand1.typ == 2 && L->operand2.typ== 2)
-                            L->indetifikator->hodnota.dvouger=L->operand1->hodnota.dvouger*L->operand2->hodnota.dvouger;
+                            L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger*L->operand2.hodnota.dvouger;
 
     else return;/* error*/
 }
 
-void del(struct TreAdres* L)
+int dell(struct TreAdres* L)
 {
     if(L->operand1.typ == 1 && L->operand2.typ == 1)
 					{
-					if(L->indetifikator.typ == 1 && L->operand2->hodnota.inger!= 0)
-						L->indetifikator->hodnota.inger=L->operand1->hodnota.inger/L->operand2->hodnota.inger;
+					if(L->indetifikator.typ == 1 && L->operand2.hodnota.inger!= 0)
+						L->indetifikator.hodnota.inger=L->operand1.hodnota.inger/L->operand2.hodnota.inger;
 
 					else return 9;/*chyba*/
 					}
 				else return 9;/*chyba*/
 }
-void vetsi(struct TreAdres* L)
+int vetsii(struct TreAdres* L)
 {
 				if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(instr->operand1->hodnota.inger>instr->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger>L->operand2.hodnota.inger);
 
 				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(instr->operand1->hodnota.dvouger>L->operand2->hodnota.dvouger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger>L->operand2.hodnota.dvouger);
 
-				else if(L->operand1.typ == 3 && instr->operand2.typ == 3)
+				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 					{
-					if(strCmp3(&(instr->operand1->hodnota.stringer),&(instr->operand2->hodnota.stringer))>0)
-                            L->indetifikator->hodnota.inger=1;
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))>0)
+                            L->indetifikator.hodnota.inger=1;
 
-					else L->indetifikator->hodnota.inger=0;
+					else L->indetifikator.hodnota.inger=0;
 					}
 				else return 9;
 		}
 
-void mensi(struct TreAdres* L)
+int mensii(struct TreAdres* L)
 {
 				if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.inger<instr->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger<L->operand2.hodnota.inger);
 
-				else if(L->operad1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.dvouger<instr->operand2->hodnota.dvouger);
+				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger<L->operand2.hodnota.dvouger);
 
 				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 
-					{
-					if(strCmp3(&(L->operand1->hodnota.stringer),&(instr->operand2->hodnota.stringer))<0)
-                            L->indetifikator->hodnota.inger=1;
 
-					else L->indetifikator->hodnota.inger=0;
-					}
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))<0)
+                            L->indetifikator.hodnota.inger=1;
+
+					else L->indetifikator.hodnota.inger=0;
+
 				else return 9;
 	}
-void vetsi_rovno(struct TreAdres* L)
+int vetsi_rovnoo(struct TreAdres* L)
 {
 				if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.inger>=L->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger>=L->operand2.hodnota.inger);
 
 				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.dvouger>=L->operand2->hodnota.dvouger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger>=L->operand2.hodnota.dvouger);
 
 				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 					{
-					if(strCmp3(&(L->operand1->hodnota.stringer),&(L->operand2->hodnota.stringer))>=0)
-                            L->indetifikator->hodnota.inger=1;
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))>=0)
+                            L->indetifikator.hodnota.inger=1;
 
-					else L->indetifikator->hodnota.inger=0;
+					else L->indetifikator.hodnota.inger=0;
 					}
 				else return 9;
 }
 
-void mensi_rovno(struct TreAdres* L)
+int mensi_rovnoo(struct TreAdres* L)
 {				if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.inger<=L->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger<=L->operand2.hodnota.inger);
 
 				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.dvouger<=L->operand2->hodnota.dvouger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger<=L->operand2.hodnota.dvouger);
 
 				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 					{
-					if(strCmp3(&(L->operand1->hodnota.stringer),&(L->operand2->hodnota.stringer))<=0)
-                            L->indetifikator->hodnota.inger=1;
-					else L->indetifikator->hodnota.inger=0;
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))<=0)
+                            L->indetifikator.hodnota.inger=1;
+					else L->indetifikator.hodnota.inger=0;
 					}
 				else return 9;
 }
 
-void rovno(struct TreAdres* L)
+int rovnoo(struct TreAdres* L)
 {
 
             if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.inger==L->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger==L->operand2.hodnota.inger);
 
 				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.dvouger==L->operand2->hodnota.dvouger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger==L->operand2.hodnota.dvouger);
 
 				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 					{
-					if(strCmp3(&(L->operand1->hodnota.stringer),&(L->operand2->hodnota.stringer))==0)
-                            L->indetifikator->hodnota.inger=1;
-					else L->indetifikator->hodnota.inger=0;
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))==0)
+                            L->indetifikator.hodnota.inger=1;
+					else L->indetifikator.hodnota.inger=0;
 					}
 				else return 9;
 }
 
-void nerovno(struct TreAdres* L)
+int nerovnoo(struct TreAdres* L)
 {
 
 				if(L->operand1.typ == 1 && L->operand2.typ == 1)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.inger!=L->operand2->hodnota.inger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.inger!=L->operand2.hodnota.inger);
 
 				else if(L->operand1.typ == 2 && L->operand2.typ == 2)
-                            L->indetifikator->hodnota.inger = (int)(L->operand1->hodnota.dvouger!=L->operand2->hodnota.dvouger);
+                            L->indetifikator.hodnota.inger = (int)(L->operand1.hodnota.dvouger!=L->operand2.hodnota.dvouger);
 
 				else if(L->operand1.typ == 3 && L->operand2.typ == 3)
 					{
-					if(strCmp3(&(L->operand1->hodnota.stringer),&(L->operand2->hodnota.stringer))!=0)
-                            L->indetifikator->hodnota.inger=1;
-					else L->indetifikator->hodnota.inger=0;
+					if(strcmp(&(L->operand1.hodnota.stringer),&(L->operand2.hodnota.stringer))!=0)
+                            L->indetifikator.hodnota.inger=1;
+					else L->indetifikator.hodnota.inger=0;
 					}
 				else return 9;
 	}
-void prirad(struct TreAdres* L)
+int priradd(struct TreAdres* L)
 {
 
 				if(L->operand1.typ == 1 && L->indetifikator.typ == 1)
-                            L->indetifikator->hodnota.inger = L->operand1->hodnota.inger;
+                            L->indetifikator.hodnota.inger = L->operand1.hodnota.inger;
 
 				else if(L->operand1.typ == 2 && L->indetifikator.typ == 2)
-                            L->indetifikator->hodnota.inger = L->operand1->hodnota.dvouger;
+                            L->indetifikator.hodnota.inger = L->operand1.hodnota.dvouger;
 
 				else if(L->operand1.typ == 3 && L->indetifikator.typ == 3)
 					{
-					if(strCopy3(&(L->indetifikator->hodnota.stringer),&(L->operand1->hodnota.stringer))== 1)
+					if(strcopy(&(L->indetifikator.hodnota.stringer),&(L->operand1.hodnota.stringer))== 1)
 						return 99;
 					}
-				else return INTERPRET_ERR;
+				else return ;/*nejakej error*/
 	}
-void cti_radek(struct TreAdres* L)
-				{c=getchar();
+int cti_radekk(struct TreAdres* L)
+				{
+				    char c;
+				    c=getchar();
 				while(c != '\n' && c != EOF)
 					{
 					c=getchar();
 					}
 				}
 
-void zapis(struct TreAdres* L)
+int zapiss(struct TreAdres* L)
 {
 				if(L->indetifikator.typ == 1)
-					printf("%d",L->indetifikator->hodnota.inger);
+					printf("%d",L->indetifikator.hodnota.inger);
 				else if(L->indetifikator.typ == 2)
-					printf("%g",L->indetifikator->hodnota.dvouger);
+					printf("%g",L->indetifikator.hodnota.dvouger);
 				else if(L->indetifikator.typ == 3)
-					printf("%s",L->indetifikator->hodnota.stringer.str);
+					printf("%s",L->indetifikator.hodnota.stringer/*.str*/);/* musime doresit*/
 				else return 9;
 
 }
 
 
-void skok(struct TreAdres* L)
+int skokk(struct TreAdres* L)
 {
-				listGoto(loi,instr->addr3);
+			L = L -> skok;
 	}
 
-void skok_kdyz(struct TreAdres* L)
+int skok_kdyzz(struct TreAdres* L)
+{
+    if(L -> indetifikator.hodnota.inger == 1)
+        L = L -> ptrr;
+    else if (L -> indetifikator.hodnota.inger == 0)
+        L = L -> skok;
+}
+int cti_cisloo(struct TreAdres* L)
 {
 
-				if(L->operand1->hodnota.inger)
-					listGoto(loi,instr->addr3);    /**************************LISTGOTO je funkide na skok nwm jak to udelat ***********/
-	}
-                if(L->operand1->typ == 3)
-					{
-					if(strCopy3(&(L->indetifikator->hodnota.shodnota),&(L->operand1->hodnota.shodnota))==1)
-						return 99;
-					for(pocitadlo=0;pocitadlo < L->operand2->hodnota.shodnota.length;pocitadlo++)
-						{
-						if(strAddChar(&(L->indetifikator->hodnota.shodnota),L->operand2->hodnota.shodnota.str[pocitadlo])==1)
-							return 99;
-						}
-					}
-
-void cti_cislo(struct TreAdres* L)
-{
-
-				if(scanf("%d",&(L->indetifikator->hodnota.inger))==EOF)
+				if(scanf("%d",&(L->indetifikator.hodnota.inger))==EOF)
 					return 9;
 
 }
-void cti_db(struct TreAdres* L)
+int cti_dbb(struct TreAdres* L)
 {
 
-				if(scanf("%lg",&(L->indetifikator->hodnota.dvouger))==EOF)
+				if(scanf("%lg",&(L->indetifikator.hodnota.dvouger))==EOF)
 					return 9;
-			break;
 
-			case I_READS:
+
+			char c;
 				c=getchar();
 				while(c != '\n' && c != EOF)
 					{
-					if(strAddChar(&(L->indetifikator->hodnota.stringer),c)==1)
+					if(strAddChar(&(L->indetifikator.hodnota.stringer),c)==1)
 						return 99;
 					c=getchar();
 					}
@@ -277,68 +266,69 @@ void cti_db(struct TreAdres* L)
 
 
 
-int Gen (struct TreAdres L) {
-    L -> Act = L-> First;
-    L = L -> Act;
+void Gen (struct TreAdres L) {
+
+
+
      int pocitadlo;
      char c;
 
-        while (L->operat!=EOF)
+        while (L.operat!=EOF)
             {
 
 
-        switch (L->operat)
+        switch (L.operat)
         {
 
 		case plus:   /* int, real, 3, boolean  (id : typ ;)*/
-                                plus(L);
+                                pluss(&L);
 			break;
 		case minus :
-                                minus(L);
+                                minuss(&L);
 
 			break;
 		case nasob:
-                                nasob(L);
+                                nasobb(&L);
 			break;
 		case del:
-                                del(L);
+                                dell(&L);
 			break;
-		case vetsi:             vetsi(L);
+		case vetsi:             vetsii(&L);
 
 			break;
-		case mensi:             mensi(L);
+		case mensi:             mensii(&L);
 
 			break;
-		case vetsi_rovno:       vetsi_rovno(L);
+		case vetsi_rovno:       vetsi_rovnoo(&L);
 			break;
-		case mensi_rovno:       mensi_rovno(L);
+		case mensi_rovno:       mensi_rovnoo(&L);
 
 			break;
-        case rovno:             rovno(L);
+        case rovno:             rovnoo(&L);
 
 			break;
-        case nerovno:           nerovno(L);
+        case nerovno:           nerovnoo(&L);
 
 			break;
-        case prirad:            prirad(L);
+        case prirad:            priradd(&L);
 
 			break;
-        case cti_cislo:         cti_cislo(L);
+        case cti_cislo:         cti_cisloo(&L);
 
 			break;
-        case cti_radek:         cti_radek(L);
+        case cti_radek:         cti_radekk(&L);
 
 			break;
-        case cti_db:            cti_db(L);
+        case cti_db:            cti_dbb(&L);
 
 			break;
-        case zapis:             zapis(L);
+        case zapis:             zapiss(&L);
 
 			break;
-        case skok:              skok(L);
+        case skok:              skokk(&L);
 
 			break;
-        case skok_kdyz:         skok_kdyz(L);
+        case skok_kdyz:         skok_kdyzz(&L);
 
 			break;
 
@@ -346,18 +336,12 @@ int Gen (struct TreAdres L) {
 			GlobalErr ("Internal error: Invalid instruction\n");
 
 	}
-	if (L -> Act != NULL)
-	L -> act = L-> Act -> ptr;
+	L = L -> ptrr;
 
-	if (L->Act == NULL )
-    {
-      return 9;
+
+
     }
-    else return &(L);
+   return 0;
 	}
-  return 0;
-}
 
-int main(){
-Gen ();
-}
+

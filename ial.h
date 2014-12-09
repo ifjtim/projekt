@@ -91,5 +91,5 @@ unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funk
 void vypis(struct htab_t *t);
 void vypisg(struct htab_global *t);
 
-void generuj(struct htab_t *s);
+void generuj(struct htab_t *s,struct htab_listitem  op1,struct htab_listitem  op2,struct htab_listitem  opp);
 #endif

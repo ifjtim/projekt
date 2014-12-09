@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 		printf("%s\t%u\n",kolo-> keyg,kolo->typg);
 		htab_clearg(t);
 	}*/
-generuj(lokal_lobal);
+//generuj(lokal_lobal);
 vypis(lokal_lobal);
 printf("\n");
 if(pomo!=NULL)

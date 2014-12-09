@@ -281,7 +281,7 @@ void htab_free(struct htab_t *t){
 	 
 }
 
-int over(char *k,struct htab_t *t)
+int over(char *k,struct htab_t *t) //prohledava lokalni tabulku symbolu
 {
 	
 struct htab_listitem *seznam;

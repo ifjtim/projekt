@@ -5,12 +5,7 @@
 #define FALSE 0
 #define TRUE 1
 #include<stdbool.h>
-void bLast(string1 *search, int *last);
-int find(string1 *s, string1 *search);
 
-char *sort(string1 *s);
-
-int error(int cislo_err);
 
 typedef union co
 {
@@ -20,11 +15,18 @@ typedef union co
 	string1 stringer;
 }Tco;
 
+typedef struct { 
+    struct TreAdres *Act;
+    struct TreAdres *First;
+	 struct TreAdres *Lost;
+} tList;
+
 struct htab_listitem{  // struktura pro tabulku znaku key je jmeno idefikatora
 char *key;
 unsigned int typ;
 Tco  hodnota;
 bool deklarr;
+
 struct htab_listitem *next;
 };
 
@@ -37,14 +39,11 @@ struct htab_listitem  operat;
 int indetifikator;
 };
 
-typedef struct { 
-    struct TreAdres Act;
-    struct TreAdres First;
-} tList;
 
 struct htab_t{
 unsigned int htable_size;
 int nahradni;
+tList *adres;
 struct htab_listitem *ptr[];
 };
 
@@ -58,7 +57,7 @@ char *keyg;
 unsigned int typg;
 struct htab_t *ktera;
 bool deklar;
-//tList *adres;// zacatek seynamu instrukci 
+//// zacatek seynamu instrukci 
 struct htab_listglobal *nextg;
 };
 // struktura instrukci
@@ -69,6 +68,10 @@ struct htab_t *lokal_lobal;
 struct htab_t *pomo;
 //char *funkce;
 
+void bLast(string1 *search, int *last);
+int find(string1 *s, string1 *search);
+char *sort(string1 *s);
+int error(int cislo_err);
 
 void smaz();
 int over(char *k,struct htab_t *t);
@@ -87,4 +90,6 @@ void htab_clear(struct htab_t *t);   //uvoleneni seynamu
 unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funkce
 void vypis(struct htab_t *t);
 void vypisg(struct htab_global *t);
+
+void generuj(struct htab_t *s);
 #endif

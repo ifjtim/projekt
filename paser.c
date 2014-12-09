@@ -5,7 +5,8 @@
 #include "interpret.h"
 #include "mystring.h"
 #include "ial.h"
-
+#include "paser.h"
+#include "lexana.h"
 
 int provertyp(){
 	
@@ -656,7 +657,7 @@ void prevodint(int velikost,string1 *s){
 	sprintf(s->data, "%i", velikost); 
 }
 
-void zapisstring(){
+struct htab_listitem * zapisstring(){
 	string1 key;
 	struct htab_listitem *seznam;
 	
@@ -670,10 +671,11 @@ void zapisstring(){
 	//printf(" %s ",pom.data);
 		strFree(&str_g);
 		strInit(&str_g);
+		return seznam;
 	
 }
 
-void zapisint(){
+struct htab_listitem * zapisint(){
 	string1 key;
 	//int pom;
 	struct htab_listitem *seznam;
@@ -688,10 +690,11 @@ void zapisint(){
 	//printf(" %d ",pom);
 		strFree(&str_g);
 		strInit(&str_g);
+		return seznam;
 	
 }
 
-void zapisreal(){
+struct htab_listitem * zapisreal(){
 	string1 key;
 	//double pom;
 	struct htab_listitem *seznam;
@@ -706,12 +709,13 @@ void zapisreal(){
 	//printf(" %f ",pom);
 		strFree(&str_g);
 		strInit(&str_g);
+		return seznam;
 	
 }
 
 
 
-void zapisboll(){
+struct htab_listitem * zapisboll(){
 	string1 key;
 	//bool  pom;
 	struct htab_listitem *seznam;
@@ -726,5 +730,6 @@ void zapisboll(){
 	//printf(" %d",pom);
 		strFree(&str_g);
 		strInit(&str_g);
+		return seznam;
 	
 }

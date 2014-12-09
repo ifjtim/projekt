@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "paser.h"
+#include "lexana.h"
 
 int main(int argc, char *argv[])
 {
@@ -70,10 +71,11 @@ int main(int argc, char *argv[])
 		printf("%s\t%u\n",kolo-> keyg,kolo->typg);
 		htab_clearg(t);
 	}*/
-/*vypis(lokal_lobal);
+generuj(lokal_lobal);
+vypis(lokal_lobal);
 printf("\n");
 if(pomo!=NULL)
-vypis(pomo);*/
+vypis(pomo);
 return 0;
 }
 //zkouska

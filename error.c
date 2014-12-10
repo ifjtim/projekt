@@ -40,22 +40,22 @@ int error(int cislo_err){
 		
 		case 5:
 			smaz();
-			printf("5");
+			printf("e5");
 		exit(5);
 	
 		case 6:
 			smaz();
-			printf("6");
+			printf("e6");
 		exit(6);
 
 		case 7:
 			smaz();
-			printf("7");
+			printf("e7");
 		exit(7);
 
 		case 8:
 			smaz();
-			printf("8");
+			printf("e8");
 		exit(8);
 
 		case 9:

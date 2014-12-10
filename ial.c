@@ -108,6 +108,7 @@ struct htab_t *htab_init(int size){ //lokalni tabulka
  t->htable_size = size;
  t->nahradni=0;
  t->adres=NULL;
+ t->co=NULL;
  return t;// vraci odkaz na tabulku
 }
 
@@ -152,6 +153,42 @@ struct htab_listitem * htab_lookup(struct htab_t *t, const char *key){
 			return seznam;
 }
 
+struct zapis * lookup_zapis(struct htab_listitem *p,struct htab_t *t){
+	struct zapis *dalsi=NULL,*predtim=NULL,*predtim2;
+	
+	predtim=t->co;
+	if(predtim==NULL)
+	{
+		if((dalsi= (struct zapis *) malloc(sizeof(struct zapis)))==NULL)// pokud neni chyba vztvoři se novy prvek
+	error(99);
+		dalsi->next=NULL;
+		dalsi->promenna=p;
+		t->co=dalsi;
+		
+	}
+	else
+	{
+		
+			while(predtim!=NULL){
+			
+				predtim2=predtim;
+				predtim=predtim->next;
+			}
+			
+			
+			if((dalsi= (struct zapis *) malloc(sizeof(struct zapis)))==NULL)// pokud neni chyba vztvoři se novy prvek
+			error(99);
+			
+			dalsi->promenna=p;
+			predtim2->next=dalsi;
+			//printf("%s",p->key);
+			dalsi->next=NULL;
+					//printf(" ahoj ");
+					
+	}
+			return dalsi;
+}
+
 
 
 
@@ -181,6 +218,7 @@ struct htab_listglobal * htab_lookupg(struct htab_global *t, const char *key){
 			
 			ktera=htab_init(16381);
 			seznam->ktera=ktera;
+			
 			return seznam;
 }
 
@@ -281,7 +319,7 @@ void htab_free(struct htab_t *t){
 	 
 }
 
-int over(char *k,struct htab_t *t) //prohledava lokalni tabulku symbolu
+struct htab_listitem *over(char *k,struct htab_t *t,int *vrat) //prohledava lokalni tabulku symbolu
 {
 	
 struct htab_listitem *seznam;
@@ -290,17 +328,19 @@ struct htab_listitem *seznam;
 	seznam=t->ptr[pozice];
 
 		while(seznam!=NULL){// projeti celeho seznamu
-		if(strcmp(k,seznam->key)==0) //hledani schodz kli4u
-			return seznam->typ;
+		if(strcmp(k,seznam->key)==0){ //hledani schodz kli4u
+			*vrat=seznam->typ;
+				return seznam;
+		}
 		else 
 			seznam=seznam->next; 
 	}
 	
 	
 	
-	return 0;
+	return NULL;
 }
-int gover(char *k){
+ struct htab_listitem *gover(char *k,int *vrat){
 	
 	struct htab_listitem *seznam;
 
@@ -308,15 +348,17 @@ int gover(char *k){
 	seznam=lokal_lobal->ptr[pozice];
 
 		while(seznam!=NULL){// projeti celeho seznamu
-		if(strcmp(k,seznam->key)==0) //hledani schodz kli4u
-			return seznam->typ;
+		if(strcmp(k,seznam->key)==0) {//hledani schodz kli4u
+			*vrat=seznam->typ;
+				return seznam;
+		}
 		else 
 			seznam=seznam->next; 
 	}
 	
 	
 	
-	return 0;
+	return NULL;
 }
 void vypis(struct htab_t *t){
 	struct htab_listitem *seznam, *pomocna;
@@ -350,4 +392,23 @@ void vypisg(struct htab_global *t){
 		
 		
 	
+}
+
+struct htab_listglobal *volanifukce(char *key){
+	
+	struct htab_listglobal *seznam;
+
+	unsigned int pozice=hash_function(key,global->htable_global); // ziskani ktere seznamu bude zapisovane(ktere ptr)
+	seznam=global->ptrg[pozice];
+
+		while(seznam!=NULL){// projeti celeho seznamu
+		if(strcmp(key,seznam->keyg)==0) //hledani schodz kli4u
+			return seznam;
+		else 
+			seznam=seznam->nextg; 
+	}
+	
+	
+	
+	return NULL;
 }

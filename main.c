@@ -72,10 +72,11 @@ int main(int argc, char *argv[])
 		htab_clearg(t);
 	}*/
 //generuj(lokal_lobal);
-vypis(lokal_lobal);
+/*vypis(lokal_lobal);
 printf("\n");
 if(pomo!=NULL)
-vypis(pomo);
+ vypis(pomo);*/
+jede();
 return 0;
 }
 //zkouska

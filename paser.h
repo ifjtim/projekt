@@ -8,7 +8,7 @@ int neww; //urcuje jestli nasist novy tokone nebo ne
 void sts();
 void new_token();
 int func();
-void type();
+struct htab_listitem * type();
 void params();
 void params_next();
 void op();

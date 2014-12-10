@@ -33,9 +33,9 @@ struct htab_listitem *next;
  struct TreAdres {
 struct TreAdres *ptrr;
 struct TreAdres *skok;
-struct htab_listitem  operand1;
-struct htab_listitem  operand2;
-struct htab_listitem  operat;
+struct htab_listitem  *operand1;
+struct htab_listitem  *operand2;
+struct htab_listitem  *operat;
 int indetifikator;
 };
 
@@ -44,6 +44,7 @@ struct htab_t{
 unsigned int htable_size;
 int nahradni;
 tList *adres;
+struct zapis *co;
 struct htab_listitem *ptr[];
 };
 
@@ -51,11 +52,16 @@ struct htab_global{
 unsigned int htable_global;
 struct htab_listglobal *ptrg[];
 };
+struct zapis{
+	struct zapis *next;
+	struct htab_listitem *promenna;
+};
 
 struct htab_listglobal{  // struktura pro tabulku znaku key je jmeno idefikatora
 char *keyg;
 unsigned int typg;
 struct htab_t *ktera;
+
 bool deklar;
 //// zacatek seynamu instrukci 
 struct htab_listglobal *nextg;
@@ -74,8 +80,8 @@ char *sort(string1 *s);
 int error(int cislo_err);
 
 void smaz();
-int over(char *k,struct htab_t *t);
-int gover(char *k);
+struct htab_listitem *over(char *k,struct htab_t *t,int *vrat);
+struct htab_listitem *gover(char *k,int *vrat);
 struct htab_global *htab_initg(int size);
 struct htab_listglobal * htab_lookupg(struct htab_global *t, const char *key); //vloženi id
 void htab_typg(struct htab_listglobal *seznam,int typ);                  //vlozeni typu
@@ -91,5 +97,9 @@ unsigned int hash_function(const char *str, unsigned htable_size);   //hash_funk
 void vypis(struct htab_t *t);
 void vypisg(struct htab_global *t);
 
-void generuj(struct htab_t *s,struct htab_listitem  op1,struct htab_listitem  op2,struct htab_listitem  opp);
+struct htab_listglobal *volanifukce(char *k);//hledani funkce
+
+struct zapis * lookup_zapis(struct htab_listitem *p,struct htab_t *t);
+
+struct TreAdres *generuj(struct htab_t *s,struct htab_listitem * op1,struct htab_listitem * op2,struct htab_listitem * opp, int i);
 #endif

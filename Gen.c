@@ -235,7 +235,7 @@ int cti(struct TreAdres* L)
 {
 
 				if(scanf("%d",&(L->indetifikator.hodnota.inger))==EOF)
-					return 9;
+					return error(9);
              else  if(scanf("%lg",&(L->indetifikator.hodnota.dvouger))==EOF)
 					return error(9);
 

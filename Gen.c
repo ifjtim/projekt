@@ -2,7 +2,6 @@
 #include "ial.h"
 
 
-
 int pluss(struct TreAdres *L)
 {
     int pocitadlo;
@@ -26,7 +25,7 @@ int pluss(struct TreAdres *L)
 
 
 					}
-        else return 9; /* error*/
+        else return error(9); /* error*/
 				/* chybí 3*/
 }
 int minuss(struct TreAdres* L)
@@ -49,7 +48,7 @@ int minuss(struct TreAdres* L)
     else if(L->operand1.typ == 2 && L->operand2.typ == 2)
                             L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger-L->operand2.hodnota.dvouger;
 
-        else return 9; /* error*/
+        else return error(9); /* error*/
 
 }
 int nasobb(struct TreAdres* L)
@@ -70,7 +69,7 @@ int nasobb(struct TreAdres* L)
     else if(L->operand1.typ == 2 && L->operand2.typ== 2)
                             L->indetifikator.hodnota.dvouger=L->operand1.hodnota.dvouger*L->operand2.hodnota.dvouger;
 
-    else return;/* error*/
+    else return error(9);/* error*/
 }
 
 int dell(struct TreAdres* L)
@@ -80,9 +79,9 @@ int dell(struct TreAdres* L)
 					if(L->indetifikator.typ == 1 && L->operand2.hodnota.inger!= 0)
 						L->indetifikator.hodnota.inger=L->operand1.hodnota.inger/L->operand2.hodnota.inger;
 
-					else return 9;/*chyba*/
+					else return error(9);/*chyba*/
 					}
-				else return 9;/*chyba*/
+				else return error(9);/*chyba*/
 }
 int vetsii(struct TreAdres* L)
 {
@@ -99,7 +98,7 @@ int vetsii(struct TreAdres* L)
 
 					else L->indetifikator.hodnota.inger=0;
 					}
-				else return 9;
+				else return error(9);
 		}
 
 int mensii(struct TreAdres* L)
@@ -118,7 +117,7 @@ int mensii(struct TreAdres* L)
 
 					else L->indetifikator.hodnota.inger=0;
 
-				else return 9;
+				else return error(9);
 	}
 int vetsi_rovnoo(struct TreAdres* L)
 {
@@ -135,7 +134,7 @@ int vetsi_rovnoo(struct TreAdres* L)
 
 					else L->indetifikator.hodnota.inger=0;
 					}
-				else return 9;
+				else return error(9);
 }
 
 int mensi_rovnoo(struct TreAdres* L)
@@ -151,7 +150,7 @@ int mensi_rovnoo(struct TreAdres* L)
                             L->indetifikator.hodnota.inger=1;
 					else L->indetifikator.hodnota.inger=0;
 					}
-				else return 9;
+				else return error(9);
 }
 
 int rovnoo(struct TreAdres* L)
@@ -169,7 +168,7 @@ int rovnoo(struct TreAdres* L)
                             L->indetifikator.hodnota.inger=1;
 					else L->indetifikator.hodnota.inger=0;
 					}
-				else return 9;
+				else return error(9);
 }
 
 int nerovnoo(struct TreAdres* L)
@@ -187,7 +186,7 @@ int nerovnoo(struct TreAdres* L)
                             L->indetifikator.hodnota.inger=1;
 					else L->indetifikator.hodnota.inger=0;
 					}
-				else return 9;
+				else return error(9);
 	}
 int priradd(struct TreAdres* L)
 {
@@ -201,19 +200,11 @@ int priradd(struct TreAdres* L)
 				else if(L->operand1.typ == 3 && L->indetifikator.typ == 3)
 					{
 					if(strcopy(&(L->indetifikator.hodnota.stringer),&(L->operand1.hodnota.stringer))== 1)
-						return 99;
+						return error(99);
 					}
 				else return ;/*nejakej error*/
 	}
-int cti_radekk(struct TreAdres* L)
-				{
-				    char c;
-				    c=getchar();
-				while(c != '\n' && c != EOF)
-					{
-					c=getchar();
-					}
-				}
+
 
 int zapiss(struct TreAdres* L)
 {
@@ -223,7 +214,7 @@ int zapiss(struct TreAdres* L)
 					printf("%g",L->indetifikator.hodnota.dvouger);
 				else if(L->indetifikator.typ == 3)
 					printf("%s",L->indetifikator.hodnota.stringer/*.str*/);/* musime doresit*/
-				else return 9;
+				else return error(9);
 
 }
 
@@ -240,98 +231,91 @@ int skok_kdyzz(struct TreAdres* L)
     else if (L -> indetifikator.hodnota.inger == 0)
         L = L -> skok;
 }
-int cti_cisloo(struct TreAdres* L)
+int cti(struct TreAdres* L)
 {
 
 				if(scanf("%d",&(L->indetifikator.hodnota.inger))==EOF)
 					return 9;
+             else  if(scanf("%lg",&(L->indetifikator.hodnota.dvouger))==EOF)
+					return error(9);
 
 }
-int cti_dbb(struct TreAdres* L)
+
+int kon_while(struct TreAdres* L)
 {
-
-				if(scanf("%lg",&(L->indetifikator.hodnota.dvouger))==EOF)
-					return 9;
-
-
-			char c;
-				c=getchar();
-				while(c != '\n' && c != EOF)
-					{
-					if(strAddChar(&(L->indetifikator.hodnota.stringer),c)==1)
-						return 99;
-					c=getchar();
-					}
+      if (L->operand1.hodnota.inger==1)
+      L = L -> skok;
+      else return
 }
 
+int skok_fun(struct TreAdres* L)
+{
+L = L -> skok;
 
-
-void Gen (struct TreAdres L) {
+}
+void Gen (struct TreAdres *L) {
 
 
 
      int pocitadlo;
      char c;
 
-        while (L.operat!=EOF)
+        while (L->operat!=EOF)
             {
 
 
-        switch (L.operat)
+        switch (L->operat)
         {
 
-		case plus:   /* int, real, 3, boolean  (id : typ ;)*/
+		case secti:   /* int, real, 3, boolean  (id : typ ;)*/
                                 pluss(&L);
 			break;
-		case minus :
+		case odecti :
                                 minuss(&L);
 
 			break;
-		case nasob:
+		case vynasob:
                                 nasobb(&L);
 			break;
-		case del:
+		case vydel:
                                 dell(&L);
 			break;
-		case vetsi:             vetsii(&L);
+		case porovnej_vetsi:             vetsii(&L);
 
 			break;
-		case mensi:             mensii(&L);
+		case porovnej_mensi:             mensii(&L);
 
 			break;
-		case vetsi_rovno:       vetsi_rovnoo(&L);
+		case porovnej_vetsi_rovnase:       vetsi_rovnoo(&L);
 			break;
-		case mensi_rovno:       mensi_rovnoo(&L);
+		case porovnej_mensi_rovnase:       mensi_rovnoo(&L);
 
 			break;
-        case rovno:             rovnoo(&L);
+        case porovnej_rovna:             rovnoo(&L);
 
 			break;
-        case nerovno:           nerovnoo(&L);
+        case porovnej_nerovnase:           nerovnoo(&L);
 
 			break;
         case prirad:            priradd(&L);
 
 			break;
-        case cti_cislo:         cti_cisloo(&L);
-
-			break;
-        case cti_radek:         cti_radekk(&L);
-
-			break;
-        case cti_db:            cti_dbb(&L);
+        case cti:         cti_cisloo(&L);
 
 			break;
         case zapis:             zapiss(&L);
 
 			break;
-        case skok:              skokk(&L);
+        case skok_else:              skokk(&L);
 
 			break;
-        case skok_kdyz:         skok_kdyzz(&L);
+        case skok_if:         skok_kdyzz(&L);
 
 			break;
-
+         case konec_while:         kon_while(&L);
+            break;
+         case skok_funkce:         skok_fun(&L);
+            break;
 		default:
 			GlobalErr ("Internal error: Invalid instruction\n");
 
@@ -343,5 +327,4 @@ void Gen (struct TreAdres L) {
     }
    return 0;
 	}
-
 

@@ -428,9 +428,9 @@ void rite()
 	else neww=2;
 }
 
-void expr()
+struct htab_listitem * expr()
 {
-	struct htab_listitem *g,*pom,*pom2;
+	struct htab_listitem *g,*pom;
 	int p;
 	struct htab_listglobal *vypomoc;
 	struct zapis *sracka;
@@ -454,6 +454,8 @@ void expr()
 					}
 					else if(p==3){}
 					else error(4);
+					pom=universal(3);
+					generuj(lokal,g,NULL,pom, sortni);
 				}
 				else if(token== hodnota_string){}
 				else error(4);
@@ -461,6 +463,7 @@ void expr()
 				strInit(&str_g);
 			new_token();
 			if(token!=zavorkaD)error(2);
+			return pom;
 		
 	}
 	else if(token==F_copy)
@@ -836,7 +839,7 @@ struct htab_listitem * zapisreal(){
 
 
 
-struct htab_listitem * zapisboll(){
+struct htab_listitem * zapisboll(){//uprav
 	string1 key;
 	//bool  pom;
 	struct htab_listitem *seznam;
@@ -848,6 +851,33 @@ struct htab_listitem * zapisboll(){
 	//pom=seznam->hodnota.bunger;
 	htab_typ(seznam,4);
 	seznam->deklarr=TRUE;
+	//printf(" %d",pom);
+		strFree(&str_g);
+		strInit(&str_g);
+		return seznam;
+	
+}
+
+struct htab_listitem * universal(int co){
+	string1 key;
+	//bool  pom;
+	struct htab_listitem *seznam;
+	
+	prevodint(lokal->nahradni,&key);
+	if((seznam=htab_lookup(lokal,key.data))==NULL) error(99);
+	lokal->nahradni=lokal->nahradni+1;
+	//seznam.hodnota=NULL;
+	/*if(co==1)
+		seznam->hodnota.inger=NULL;
+	if(co==2)
+	seznam->hodnota.dvouger=NULL;
+	if(co==3)
+	seznam->hodnota.stringer=NULL;
+		if(co==4)
+	seznam->hodnota.bunger=NULL;
+	//pom=seznam->hodnota.bunger;*/
+	htab_typ(seznam,co);
+	seznam->deklarr=FALSE;
 	//printf(" %d",pom);
 		strFree(&str_g);
 		strInit(&str_g);

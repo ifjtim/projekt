@@ -5,113 +5,72 @@
 // prediktivna analyza
 struct htab_listitem prediktivna()
 {
-     struct htab_listitem *tmp,*vysedek;
-     // pomocne pre zatvorky 
-     bool L_PAREN = false; 
-     bool R_PAREN = false;   
-     
-    new_token();
-    //potreba pocatecni init
-	 
-     // cyklime kym nie je jeden z tychto tokenov 
+     struct htab_listitem *tmp,*vysledek;
+	 tListVar var;
+	 tListOp op;
+     // pomocne pre zatvorky
+     bool L_PAREN = false;
+     bool R_PAREN = false;
+     initList(&var);
+     new_token();
+    //potreba pocatecni init !!
+
+     // cyklime kym nie je jeden z tychto tokenov
      // bud je to koniec priradenia, zaciatok vetvy if alebo while
      // na inom mieste sa vyraz spracovavat nemoze
-     while (token != SEMICOLON && token != THEN && token != DO && token != END)
+     while (token != strednik && token != K_then && token != K_do && token != K_end)
      {
-     	 // ak sme dostali pravu zatvorku tak tuto cast musime preskocit 
+     	 // ak sme dostali pravu zatvorku tak tuto cast musime preskocit
      	 if (R_PAREN == false)
-     	 {	
+     	 {
      	 	// tu spracovavame literaly, ID a lavu zatvorku
             switch (token)
             {
-            	case ID:
+            	case id:
             	{
             	  if((tmp=over(str_g.data,lokal))==NULL)
 					  {
 						 (tmp=gover(str_g.data))==NULL)error(3);
 					  }
 
-             	    
-                   pushvar(tmp);
+
+                    pushVar(, tmp);
             		break;
             	}
-            	case NUM_INT:// nutno prepsat case podle enum
+            	case cislo_integer:// nutno prepsat case podle enum
             	{
-            	    tmp=zapisint();
-                     pushvar(tmp);
+            	    tmp = zapisint();
+                    pushVar(&var, tmp);
                     break;
             	}
-            	case NUM_DOUBLE:
+            	case cislo_real:
             	{
-            		char b[100];
-                    generate(itemFunction->symbolTab, b);
-                       
-                    tvalue val;
-                    val.d = lexDouble;
-                    dataSymbol *pom;
-                    syntStabContAdd(itemFunction->symbolTab, b, tReal, true, val, &pom);       
-
-                    a.id = pom;
-                    prdPush(&prdVar, a);
+		    tmp = zapisreal();
+                    pushVar(&var, tmp);
                     break;
             	}
-            	case QUOTE:
+            	case hodnota_string:
             	{
-            		char b[100];
-
-                    char *c;
-                    c = malloc(dymString.Length + 1);
-
-                    if (c == NULL)
-                       syntFatalError(INTER_ERR, ERRORS[ERR_MSG_MALLOC]);
-
-                    strcpy(c, GetString(&dymString));    
-
-                    generate(itemFunction->symbolTab, b);
-                     
-                    tvalue val;
-                    val.s = c;
-
-                
-      	            dataSymbol *pom;
-                    syntStabContAdd(itemFunction->symbolTab, b, tString, true, val, &pom);       
-
-                    a.id = pom;
-                    prdPush(&prdVar, a);
+		    tmp = zapisstring();
+                    pushVar(&var, tmp);
                     break;
             	}
-            /*	case TRUE_:
+            /*	case K_true:
             	{
-            		char b[100];
-                    generate(itemFunction->symbolTab, b);
-                       
-                    tvalue val;
-                    val.b = true;
-                    dataSymbol *pom;
-                    syntStabContAdd(itemFunction->symbolTab, b, tBool, true, val, &pom);       
-
-                    a.id = pom;
-                    prdPush(&prdVar, a);
+		    tmp = zapisboll();
+                    pushVar(&var, tmp);
                     break;
             	}
-            	case FALSE_:
+            	case K_false:
             	{
-            		char b[100];
-                    generate(itemFunction->symbolTab, b);
-                       
-                    tvalue val;
-                    val.b = false;
-                    dataSymbol *pom;
-                    syntStabContAdd(itemFunction->symbolTab, b, tBool, true, val, &pom);       
-
-                    a.id = pom;
-                    prdPush(&prdVar, a);
+		    tmp = zapisboll();
+                    pushVar(&var, tmp);
                     break;
             	}*/
-            	case L_PARENTHESES:
+            	case zavorkaP:
             	{
-            		
-            	    pushgarm(token);
+
+            	    pushOp(&op, token);
             	    L_PAREN =true;
             	    break;
             	}
@@ -120,252 +79,244 @@ struct htab_listitem prediktivna()
             }
             new_token();
          }
-         R_PAREN = false;    
-         
-         // ak sme spracovali lavu zatvorku toto musime preskocit 
+         R_PAREN = false;
+
+         // ak sme spracovali lavu zatvorku toto musime preskocit
          if(L_PAREN == false)
-         {   
-            // ak sme dostali token po ktorom vieme, ze musime skoncit 
-            if (!(token != SEMICOLON && token != THEN && token != DO && token != END))
+         {
+            // ak sme dostali token po ktorom vieme, ze musime skoncit
+            if (!(token != strednik && token != K_then && token != K_do && token != K_end))
             	break;
-            // spracovavame prichadzajuce operatory a podla ich priority volame redukciu 
+            // spracovavame prichadzajuce operatory a podla ich priority volame redukciu
             // pozerame sa na vrchol zasobniku
             switch (token)
             {
-            	case PLUS: //jinak pojmenovane
-            	{
-            		while (!isEmpty(&prdGram) && (prdGram.last->value.i == PLUS || prdGram.last->value.i == MINUS 
-            			                         || prdGram.last->value.i == MULTIPLY || prdGram.last->value.i == DIVISION))//uprav
+            	case plus: //jinak pojmenovane
+            	{		// potreba doplnit nazvy isEmpty funkce pro OP
+            		while (!isEmpty(&op) && (op.Last->data == plus || op.Last->data == minus || op.Last->data == krat || op.Last->data == deleno))//uprav
             			  reduc(itemFunction);
-            	
-            	    PushGram(plus);
-            		break;
-            	}
-            	case MINUS:
-            	{
-            		while (!isEmpty(&prdGram) && (prdGram.last->value.i == PLUS || prdGram.last->value.i == MINUS 
-            			                         || prdGram.last->value.i == MULTIPLY || prdGram.last->value.i == DIVISION))
-            			  reduc(itemFunction);
-            		a.i = MINUS;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case MULTIPLY:
-            	{
-            		while (!isEmpty(&prdGram) && (prdGram.last->value.i == MULTIPLY || prdGram.last->value.i == DIVISION))
-            			  reduc(itemFunction);
-            		a.i = MULTIPLY;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case DIVISION:
-            	{
-            		while (!isEmpty(&prdGram) && (prdGram.last->value.i == MULTIPLY || prdGram.last->value.i == DIVISION))
-            			  reduc(itemFunction);
-            		a.i = DIVISION;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case EQUALS:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = EQUALS;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case LESS:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = LESS;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case GREATER:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = GREATER;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case LESS_EQUA:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = LESS_EQUA;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case NOT_EQUAL:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = NOT_EQUAL;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case GREATER_EQUA:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);
-            		a.i = GREATER_EQUA;
-            	    prdPush(&prdGram, a);
-            		break;
-            	}
-            	case R_PARENTHESES:
-            	{
-            		while (!isEmpty(&prdGram) && prdGram.last->value.i != L_PARENTHESES)
-            			  reduc(itemFunction);       
 
-            	    if (isEmpty(&prdGram))
-            	    	syntFatalError(SYNT_ERR, ERRORS[ERR_MSG_PREDANAl]);
-            	    pop(&prdGram);
+            	    pushOp(plus);
+            		break;
+            	}
+            	case minus:
+            	{
+            		while (!isEmpty(&op) && (op.Last->data == plus || op.Last->data == minus || op.Last->data == krat || op.Last->data == deleno))
+            			  reduc(itemFunction);
+            	    pushOp(minus);
+            		break;
+            	}
+            	case krat:
+            	{
+            		while (!isEmpty(&op) && (op.Last->data == krat || op.Last->data == deleno))
+            			  reduc(itemFunction);
+		      pushOp(krat);
+            		break;
+            	}
+            	case deleno:
+            	{
+            		while (!isEmpty(&op) && (op.Last->data == krat || op.Last->data == deleno))
+            			  reduc(itemFunction);
+			pushOp(deleno);
+            		break;
+            	}
+            	case rovnase:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(rovnase);
+            		break;
+            	}
+            	case mensi:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(mensi);
+            		break;
+            	}
+            	case vetsi:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(vetsi);
+            		break;
+            	}
+            	case mensi_rovnase:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(mensi_rovnase);
+            		break;
+            	}
+            	case nerovna:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(nerovna);
+            		break;
+            	}
+            	case vetsi_rovnase:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+			pushOp(vetsi_rovnase);
+            		break;
+            	}
+            	case zavorkaD:
+            	{
+            		while (!isEmpty(&op) && op.Last->data != zavorkaP)
+            			  reduc(itemFunction);
+
+            	    if (isEmpty(&op))
+            	    	error();	// !!! doplnit error cisla !!!
+            	    popOp(&op);
                    R_PAREN = true;
             		break;
             	}
             	default:
-            	    syntFatalError(SEM_ERR, ERRORS[ERR_MSG_TOKEN]);
+            	    error();
             }
-            get_Token();
+            new_token();
          }
-         L_PAREN = false;       
-      } // koniec cyklu 
-  
-  // sme na konci tak redukujeme kym nie je prazdny zasobnik  
-  while(!isEmpty(&prdGram))
+         L_PAREN = false;
+      } // koniec cyklu
+
+  // sme na konci tak redukujeme kym nie je prazdny zasobnik
+  while(!isEmpty(&op))
   	   reduc(itemFunction);
   // na zasobniku premennych musi byt aspon jedna premena
-  if(isEmpty(&prdVar))
-  	syntFatalError(SYNT_ERR, ERRORS[ERR_MSG_PREDANAl]);
+  if(isEmpty(&var))
+  	error();
   // vysledok analyzy
-  vysedek = pop(&prdVar).id;
+  vysledek = popVar(&var);
   // na zasobniku premennych uz nesmie byt ziadna premenna
-  if(!isEmpty(&prdVar))
-  	syntFatalError(SYNT_ERR, ERRORS[ERR_MSG_PREDANAl]);
+  if(!isEmpty(&var))
+  	error();
   // vraciame vysledok
-  return ret;
+  return vysledek;
 }
 
 void reduc(dataFunction *itemFunction)
 {
 	// POP-neme operator, aby sme vedeli ako redukovat
-	int op = pop(&prdGram).i;
+	int opi = popOp(&op);
     // a co mame redukovat
     // prdPop uz kotroluje ci nie je zasobik prazny a pripadne
-    // ukonci program 
-	struct htab_listitem b = prdPop(&prdVar);
-	struct htab_listitem a = prdPop(&prdVar);
-	
+    // ukonci program
+	struct htab_listitem b = popVar(&var);
+	struct htab_listitem a = popVar(&var);
+
 	int type = tInt;
-    // urcime vysledny typ pomocne premenej 
- 
+    // urcime vysledny typ pomocne premenej
+
     // ak je to booleovska operacia
-    if (op != PLUS && op != MINUS && op != MULTIPLY && op != DIVISION)
+    if (op != plus && op != minus && op != krat && op != deleno)
        type = tBool;
     // ak to bude string
-	else if (a.id->varType == tString || b.id->varType == tString)
-	   type = tString;
+	else if (a->typ == tString || b->typ == tString)
+	   type = tString;		//  !!! prepsat podle enum? "tString".. !!!
 	// ak to bude real
-	else if (op == DIVISION || a->type == 3 || b.id->varType == tReal)
+	else if (op == deleno || a->typ == 3 || b.->typ == tReal)
 	   type = tReal;
 
-    // vytvorime si ju 
+    // vytvorime si ju
 	/*  char c[100];
-    generate(itemFunction->symbolTab, c);                
+    generate(itemFunction->symbolTab, c);
     tvalue val;
     val.s = NULL;
     dataSymbol *pom;
     syntStabContAdd(itemFunction->symbolTab, c, type, false, val, &pom);
     *///udleam funkci
-    // podla uskutocnujeme redukciu 
+    // podla uskutocnujeme redukciu
     switch (op)
     {
-    	case PLUS:
-    	{  
-    	   if ((a.id->varType == tBool || b.id->varType == tBool) || 
-    	   	   (a.id->varType == tString && b.id->varType != tString) ||
-             (b.id->varType == tString && a.id->varType != tString))
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+    	case plus:
+    	{
+    	   if ((a->typ == tBool || b->typ == tBool) ||
+    	   	   (a->typ == tString && b->typ != tString) ||
+             (b->typ == tString && a->typ != tString))
+    	   	  error();
 
            synAddInst(&itemFunction->Inst, INST_PLUS, pom->key, a.id->key, b.id->key, NULL);
            break;
     	}
-    	case MINUS:
+    	case minus:
     	{
-    	   if (a.id->varType == tBool || b.id->varType == tBool || a.id->varType == tString || b.id->varType == tString)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+    	   if ((a->typ == tBool || b->typ == tBool) ||
+    	   	   (a->typ == tString && b->typ != tString) ||
+             (b->typ == tString && a->typ != tString))
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_MINUS, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_minus, pom->key, a.id->key, b.id->key, NULL);
            break;
     	}
-    	case MULTIPLY:
+    	case krat:
     	{
-    	   if (a.id->varType == tBool || b.id->varType == tBool || a.id->varType == tString || b.id->varType == tString)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+    	   if (a->typ == tBool || b->typ == tBool || a->typ == tString || b->typ == tString)
+    	   	  error();
 
            synAddInst(&itemFunction->Inst, INST_MUL, pom->key, a.id->key, b.id->key, NULL);
            break;
     	}
-    	case DIVISION:
+    	case deleno:
     	{
-    	   if (a.id->varType == tBool || b.id->varType == tBool || a.id->varType == tString || b.id->varType == tString)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+    	   if (a->typ == tBool || b->typ == tBool || a->typ == tString || b->typ == tString)
+    	   	  error();
 
            synAddInst(&itemFunction->Inst, INST_DIV, pom->key, a.id->key, b.id->key, NULL);
            break;
-    	} 
-       case EQUALS:
+    	}
+       case rovnase:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_EQUALS, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_rovnase, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
-       case LESS:
+       case mensi:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_LESS, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_mensi, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
-        case GREATER:
+        case vetsi:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_GREATER, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_vetsi, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
-        case LESS_EQUA:
+        case mensi_rovnase:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_LESS_EQUA, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_mensi_rovnase, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
-        case NOT_EQUAL:
+        case nerovna:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_NOT_EQUAL, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_nerovna, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
-        case GREATER_EQUA:
+        case vetsi_rovnase:
        {
-           if (a.id->varType != b.id->varType)
-    	   	  syntFatalError(SEM_OTHERS_ERR, ERRORS[ERR_MSG_OPTYPE]);
+           if (a->typ != b->typ)
+    	   	  error();
 
-           synAddInst(&itemFunction->Inst, INST_GREATER_EQUA, pom->key, a.id->key, b.id->key, NULL);
+           synAddInst(&itemFunction->Inst, INST_vetsi_rovnase, pom->key, a.id->key, b.id->key, NULL);
            break;
        }
     }
-   
-    a.id = pom;
-    prdPush(pom); 
+    // ??? !!! co s timhle? !!! ???
+    a.id = pom;		// **
+    prdPush(pom);	// **
+    //	*** *** * * **  * * **
 }

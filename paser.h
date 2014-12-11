@@ -14,7 +14,7 @@ void params_next();
 void op();
 void sts();
 void rite();
-void expr();
+struct htab_listitem * expr();
 void next();
 void returnn();
 void en();
@@ -24,5 +24,6 @@ struct htab_listitem * zapisstring();
 struct htab_listitem * zapisint();
 struct htab_listitem * zapisreal();
 struct htab_listitem * zapisboll();
+struct htab_listitem * universal(int co);
 
 #endif

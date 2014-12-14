@@ -117,7 +117,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 				
 				break;
 			}
-
+         printf("ss");
 			switch (token)
 			{
 				case plus:
@@ -227,7 +227,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 	//printf("ss");
 	 while (!isEmptyp(&opp))
   {
-	  printf("ss");
+	  
     redukuj();
   }
 	vysledek=pop(&var);
@@ -450,7 +450,7 @@ void redukuj ()
   opperator = popOp(&opp);
   b = pop(&var);
   a = pop(&var);
-  printf(" 1 ");
+ // printf(" 1 ");
   if (opperator != plus && opperator != minus && opperator != krat && opperator != deleno)
   {
     typ = 4;
@@ -583,9 +583,8 @@ void redukuj ()
       break;
     }
   }
-  // ??? !!! co s timhle? !!! ??? protoze pom je zakomentovany nahore ?? !!
-  		// **
-  pushVar(&var,pom);	// **
-  //	*** *** * * **  * * **
+  
+  pushVar(&var,pom);	
+
 
 }

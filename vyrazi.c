@@ -41,6 +41,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 
 	else
 	{
+		
 		 pushVar(&var, t);
 		 pushOp(&opp,token);
       
@@ -48,6 +49,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 	
 		while (token != K_end && token != K_then && token != K_do && token != strednik)
 		{
+			
 			switch(token)
 			{
 				case id:
@@ -65,7 +67,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 				}
 				case cislo_integer:
 				{
-					
+					//printf("d");
 						tmp = zapisint();
 					pushVar(&var, tmp);
 					break;
@@ -78,6 +80,7 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 				}
 				case cislo_real:
 				{
+					
 				tmp = zapisreal();
 					pushVar(&var, tmp);
 					break;
@@ -124,7 +127,9 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 					
 					redukuj();
 				}
+				
 				pushOp(&opp,token);
+				
 				break;
 				}
 				case minus:
@@ -147,11 +152,13 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 				}
 				case deleno:
 				{
+					
 					while ((opp.Last->data == krat || opp.Last->data == deleno) && isEmptyp(&opp) == false)
 				{
 					redukuj();
 				}
 				pushOp(&opp,token);
+				
 				break;
 				}
 				case mensi:
@@ -217,8 +224,13 @@ struct htab_listitem *prediktiv(struct htab_listitem *t)
 			new_token();
 		}
 	}
-	printf("ss");
-	vysledek=(&var);
+	//printf("ss");
+	 while (!isEmptyp(&opp))
+  {
+	  printf("ss");
+    redukuj();
+  }
+	vysledek=pop(&var);
 	neww=2;
 	return vysledek;
 }
@@ -438,12 +450,14 @@ void redukuj ()
   opperator = popOp(&opp);
   b = pop(&var);
   a = pop(&var);
+  printf(" 1 ");
   if (opperator != plus && opperator != minus && opperator != krat && opperator != deleno)
   {
     typ = 4;
   }
   else if (a->typ == 2 || b->typ == 2 || opperator == deleno)
   {
+	  
     typ = 2;
   }
   else if (a->typ == 3 || b->typ == 3)
@@ -455,6 +469,7 @@ void redukuj ()
     typ = 1;
   }
   pom=universal(typ);
+  //printf("%dpom ",pom->typ );
   switch (opperator)
   {
     case plus:
@@ -467,6 +482,7 @@ void redukuj ()
 	  {
 	    error(4);
 	  }
+	  generuj(lokal,a,b,pom, secti);
 	  //synAddInst(&itemFunction->Inst, INST_PLUS, pom->key, a.id->key, b.id->key, NULL);
       break;
 	}
@@ -480,6 +496,7 @@ void redukuj ()
 	  {
 	    error(4);
 	  }
+	  generuj(lokal,a,b,pom, odecti);
 	  //synAddInst(&itemFunction->Inst, INST_MINUS, pom->key, a.id->key, b.id->key, NULL);
       break;
 	}
@@ -493,6 +510,7 @@ void redukuj ()
 	  {
 	    error(4);
 	  }
+	  generuj(lokal,a,b,pom, vynasob);
 	  //synAddInst(&itemFunction->Inst, INST_KRAT, pom->key, a.id->key, b.id->key, NULL);
       break;
 	}
@@ -506,6 +524,7 @@ void redukuj ()
 	  {
 	    error(4);//koknout
 	  }
+	  generuj(lokal,a,b,pom, vydel);
 	 // synAddInst(&itemFunction->Inst, INST_KRAT, pom->key, a.id->key, b.id->key, NULL);
       break;
 	}

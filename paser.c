@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<stdbool.h>
+#include <stdbool.h>
 #include "interpret.h"
 #include "mystring.h"
 #include "ial.h"
@@ -327,10 +327,15 @@ void sts(){
 		if(token!=rovnase)error(2);
 		
 		vul=expr();
+		//printf(" cud ");
 		
-		//if(g->typ!=vul->typ) error(4);
-	 // generuj(lokal,vul,NULL,g, prirad);
-			printf("aloha");
+		if(g->typ!=vul->typ)
+		{ printf("AS");
+			if(g->typ==2 && vul->typ==1 ) {}
+			else error(4);
+		}
+	  generuj(lokal,vul,NULL,g, prirad);
+			//printf("aloha");
 	}
 	else if(token==K_while){
 		type();
@@ -343,7 +348,7 @@ void sts(){
 		new_token();
 		if(token!=K_do)error(2);
 		vratne=generuj(lokal,NULL,NULL,NULL, nici);
-		printf("%d ",fuj);
+		//printf("%d ",fuj);
 		pushvrat(fuj,vratne);
 		new_token();
 		if(token!=K_begin)error(2);
@@ -439,7 +444,7 @@ struct htab_listitem * expr()
 	struct htab_listitem *g,*pom,*g2,*vratka;
 	int p;
 	struct htab_listglobal *vypomoc;
-	struct zapis *sracka;
+	struct zapis *solo;
 	new_token();
 	//printf("%d ", token);
 	if(token==K_sort)
@@ -666,23 +671,28 @@ struct htab_listitem * expr()
 			strFree(&str_g);
 			strInit(&str_g);
 			vratka=prediktiv(vratka);
+			printf("%dt ", vratka->typ);
 			return vratka;
 		}
 			else{
-				sracka=vypomoc->ktera->co;
-				strFree(&str_g);
-				strInit(&str_g);
+				solo=vypomoc->ktera->co;
+            //printf("%s ",str_g.data);
 				vratka=gover(str_g.data,&p);//upravit
+			  strFree(&str_g);
+					strInit(&str_g);
 				new_token();
 				if(token==zavorkaP)
 				{
+					
 					//printf(" a%d ",vypomoc->pocet_parametru);
-					while(sracka!=NULL){
-					pom=sracka->promenna;
-						sracka=sracka->next;
+					while(solo!=NULL){
+						
+					pom=solo->promenna;
+						solo=solo->next;
 						new_token();
 							if(token==id)	
 							{
+							
 									g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
 									if(g==NULL)
 									{
@@ -693,7 +703,8 @@ struct htab_listitem * expr()
 									}
 								else if(p==pom->typ){}
 								else error(4);
-										
+								strFree(&str_g);
+								strInit(&str_g);		
 							}
 							else if(token==hodnota_string)
 							{
@@ -714,16 +725,20 @@ struct htab_listitem * expr()
 							else error(3);
 					
 					}
+					new_token();
 					if(token!=zavorkaD) error(2);
+						
 				}
 				else
 				{
+					
 					neww=2;
 					vratka=prediktiv(vratka);
 					
 				}
-				
+			
 				return vratka;
+				
 			}
 	}
 	else if(token==hodnota_string)
@@ -750,8 +765,10 @@ struct htab_listitem * expr()
 	else
 	{
 	 neww=2;
-		prediktiv(NULL);
+		vratka=prediktiv(NULL);
+	return vratka;
 	}
+	return NULL;
 }
 
 void next()//opravit

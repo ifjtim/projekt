@@ -47,6 +47,7 @@ void disposeListp (tListOp *L)
 void pushOp(tListOp *L, int OperType)
 {
   tListOpItem newItem;
+  printf("aloha");
   if ((newItem = malloc(sizeof(tListOpItem))) != NULL) {
     newItem->data = OperType;
     newItem->lptr = NULL;

@@ -41,6 +41,7 @@ int func()
 	int ok=1;
 	struct htab_listglobal *polozka;//poloyki globalni urovne
 	struct htab_listitem *seznam; //polozki lokani urovne
+	fuj=initListe(fuj);
 	while(ok==1)
 	{
 		new_token();
@@ -303,6 +304,7 @@ void op()
 void sts(){
 	struct htab_listitem *g=NULL;
 	struct htab_listitem *vul=NULL;
+	struct TreAdres *vratne=NULL;
 	int p;
 	new_token();
 	if(token==id)
@@ -324,10 +326,11 @@ void sts(){
 			new_token();
 		if(token!=rovnase)error(2);
 		
-		expr();
+		vul=expr();
 		
-	
-			
+		//if(g->typ!=vul->typ) error(4);
+	 // generuj(lokal,vul,NULL,g, prirad);
+			printf("aloha");
 	}
 	else if(token==K_while){
 		type();
@@ -339,6 +342,9 @@ void sts(){
 		strInit(&str_g);
 		new_token();
 		if(token!=K_do)error(2);
+		vratne=generuj(lokal,NULL,NULL,NULL, nici);
+		printf("%d ",fuj);
+		pushvrat(fuj,vratne);
 		new_token();
 		if(token!=K_begin)error(2);
 		sts();
@@ -430,7 +436,7 @@ void rite()
 
 struct htab_listitem * expr()
 {
-	struct htab_listitem *g,*pom;
+	struct htab_listitem *g,*pom,*g2,*vratka;
 	int p;
 	struct htab_listglobal *vypomoc;
 	struct zapis *sracka;
@@ -441,7 +447,8 @@ struct htab_listitem * expr()
 		
 			new_token();
 			if(token!=zavorkaP)error(2);
-			type();
+			//type();
+			new_token();
 				if((token==id))
 				{
 					g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
@@ -454,11 +461,16 @@ struct htab_listitem * expr()
 					}
 					else if(p==3){}
 					else error(4);
-					pom=universal(3);
-					generuj(lokal,g,NULL,pom, sortni);
+					
+					
 				}
-				else if(token== hodnota_string){}
+				else if(token== hodnota_string)
+				{
+					g=zapisstring();
+				}
 				else error(4);
+				pom=universal(3);
+				generuj(lokal,g,NULL,pom, sortni);
 				strFree(&str_g);
 				strInit(&str_g);
 			new_token();
@@ -470,7 +482,8 @@ struct htab_listitem * expr()
 	{
 				new_token();
 				if(token!=zavorkaP)error(2);
-				type();
+				//type();
+				new_token();
 				if((token==id))
 					{
 						
@@ -485,13 +498,42 @@ struct htab_listitem * expr()
 						else if(p==3){}
 						else error(4);
 					}
-					else if(token== hodnota_string){}
+					else if(token== hodnota_string)
+					{
+						g=zapisstring();
+					}
 					else error(4);
 					strFree(&str_g);
 					strInit(&str_g);
 				new_token();
 				if(token!=carka)error(2);
-				type();
+				//type();
+				new_token();
+				if((token==id))
+					{
+						g2=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
+						if(g2==NULL)
+						{
+							
+							g2=gover(str_g.data,&p);//proveri jestli je v tabulce od main
+							if(g2==NULL) error(3);
+							if(p!=1) error(4);
+						}
+						else if(p==1){}
+						else error(4);
+					}
+					else if(token== cislo_integer)
+					{
+						g2=zapisint();
+					}
+					else error(4);
+					strFree(&str_g);
+					strInit(&str_g);
+					generuj(lokal,g,g2,NULL, copy1);
+				new_token();
+				if(token!=carka)error(2);
+				//type();
+				new_token();
 				if((token==id))
 					{
 						g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
@@ -505,38 +547,25 @@ struct htab_listitem * expr()
 						else if(p==1){}
 						else error(4);
 					}
-					else if(token== cislo_integer){}
-					else error(4);
-					strFree(&str_g);
-					strInit(&str_g);
-				new_token();
-				if(token!=carka)error(2);
-				type();
-				if((token==id))
+					else if(token== cislo_integer)
 					{
-						g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
-						if(g==NULL)
-						{
-							
-							g=gover(str_g.data,&p);//proveri jestli je v tabulce od main
-							if(g==NULL) error(3);
-							if(p!=1) error(4);
-						}
-						else if(p==1){}
-						else error(4);
+						g=zapisint();
 					}
-					else if(token== cislo_integer){}
 					else error(4);
 					strFree(&str_g);
 					strInit(&str_g);
+					pom=universal(3);
+					generuj(lokal,g,NULL,pom, copy2);
 				new_token();
 				if(token!=zavorkaD)error(2);
+				return pom;
 	}
 	else if(token==F_leight)
 	{
 					new_token();
 					if(token!=zavorkaP)error(2);
-					type();
+					//type();
+					new_token();
 					if((token==id))
 						{
 							g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
@@ -550,19 +579,26 @@ struct htab_listitem * expr()
 							else if(p==3){}
 							else error(4);
 						}
-						else if(token== hodnota_string){}
+						else if(token== hodnota_string)
+						{
+							g=zapisstring();
+						}
 						else error(4);
 						strFree(&str_g);
 						strInit(&str_g);
+						pom=universal(1);
+					generuj(lokal,g,NULL,pom, leig);
 					new_token();
 					if(token!=zavorkaD)error(2);
+					return pom;
 	}
 	
 		else if(token==K_find)
 		{
 			new_token();
 			if(token!=zavorkaP)error(2);
-			type();
+			//type();
+			new_token();
 			if((token==id))
 				{
 					g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
@@ -576,32 +612,42 @@ struct htab_listitem * expr()
 					else if(p==3){}
 					else error(4);
 				}
-				else if(token== hodnota_string){}
+				else if(token== hodnota_string)
+				{
+					g=zapisstring();
+				}
 				else error(4);
 				strFree(&str_g);
 			strInit(&str_g);
 			new_token();
 			if(token!=carka)error(2);
-			type();
+			//type();
+			new_token();
 			if((token==id))
 				{
-					g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
-						if(g==NULL)
+					g2=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
+						if(g2==NULL)
 						{
 							
-							g=gover(str_g.data,&p);//proveri jestli je v tabulce od main
-							if(g==NULL) error(3);
+							g2=gover(str_g.data,&p);//proveri jestli je v tabulce od main
+							if(g2==NULL) error(3);
 							if(p!=3) error(4);
 						}
 					else if(p==3){}
 					else error(4);
 				}
-				else if(token== hodnota_string){}
+				else if(token== hodnota_string)
+				{
+					g2=zapisstring();
+				}
 				else error(4);
+				pom=universal(1);
+					generuj(lokal,g,g2,pom, fid);
 				strFree(&str_g);
 				strInit(&str_g);
 			new_token();
 			if(token!=zavorkaD)error(2);
+			return pom;
 	}
 	
 	
@@ -609,71 +655,102 @@ struct htab_listitem * expr()
 	{
 		if((vypomoc=volanifukce(str_g.data))==NULL)
 		{
-			neww=2;
-			strFree(&str_g);
-				strInit(&str_g);
-			prediktiv();
-		}
-		else{
-			sracka=vypomoc->ktera->co;
+			
+			vratka=over(str_g.data,lokal,&p);
+			if(vratka==NULL)
+			{
+				
+				vratka=gover(str_g.data,&p);
+				if(vratka==NULL) error(3);	
+			}
 			strFree(&str_g);
 			strInit(&str_g);
-			new_token();
-			if(token==zavorkaP)
-			{
-				//printf(" a%d ",vypomoc->pocet_parametru);
-				while(sracka!=NULL){
-				pom=sracka->promenna;
-					sracka=sracka->next;
-					new_token();
-						if(token==id)
-							
-						{
-								g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
-								if(g==NULL)
-								{
-									
-									g=gover(str_g.data,&p);//proveri jestli je v tabulce od main
-									if(g==NULL) error(3);
-									if(p!=pom->typ) error(4);
-								}
-							else if(p==pom->typ){}
-							else error(4);
-									
-						}
-						else if(token==hodnota_string)
-						{
-							zapisstring();
-							if(3!=pom->typ) error(4);
-						}
-						else if(token==cislo_integer)
-						{
-							zapisint();
-							if(1!=pom->typ) error(4);
-						}
-						else if(token==cislo_real)
-						{
-							zapisreal();
-							if(2!=pom->typ) error(4);
-							
-						}
-						else error(2);
-				
-				}
-					prediktiv();
-			}
-			else
-			{
-			neww=2;
-			prediktiv();
-			}
+			vratka=prediktiv(vratka);
+			return vratka;
 		}
+			else{
+				sracka=vypomoc->ktera->co;
+				strFree(&str_g);
+				strInit(&str_g);
+				vratka=gover(str_g.data,&p);//upravit
+				new_token();
+				if(token==zavorkaP)
+				{
+					//printf(" a%d ",vypomoc->pocet_parametru);
+					while(sracka!=NULL){
+					pom=sracka->promenna;
+						sracka=sracka->next;
+						new_token();
+							if(token==id)	
+							{
+									g=over(str_g.data,lokal,&p);//proveri jestli je v lokani tabulce
+									if(g==NULL)
+									{
+										
+										g=gover(str_g.data,&p);//proveri jestli je v tabulce od main
+										if(g==NULL) error(3);
+										if(p!=pom->typ) error(4);
+									}
+								else if(p==pom->typ){}
+								else error(4);
+										
+							}
+							else if(token==hodnota_string)
+							{
+								zapisstring();
+								if(3!=pom->typ) error(4);
+							}
+							else if(token==cislo_integer)
+							{
+								zapisint();
+								if(1!=pom->typ) error(4);
+							}
+							else if(token==cislo_real)
+							{
+								zapisreal();
+								if(2!=pom->typ) error(4);
+								
+							}
+							else error(3);
+					
+					}
+					if(token!=zavorkaD) error(2);
+				}
+				else
+				{
+					neww=2;
+					vratka=prediktiv(vratka);
+					
+				}
+				
+				return vratka;
+			}
 	}
+	else if(token==hodnota_string)
+	{
+	vratka=zapisstring();
+	vratka=prediktiv(vratka);
+	return vratka;
+	}
+	else if(token==cislo_integer)
+	{
+		
+	vratka=zapisint();
+	vratka=prediktiv(vratka);
 	
+	return vratka;
+	
+	}
+	else if(token==cislo_real)
+	{
+	vratka=zapisreal();
+	vratka=prediktiv(vratka);
+	return vratka;
+	}
 	else
 	{
-		neww=2;
-		prediktiv();
+	 neww=2;
+		prediktiv(NULL);
 	}
 }
 
@@ -705,12 +782,20 @@ void next()//opravit
 }
 void en()
 {
+	struct TreAdres *vratne=NULL,*ble;
 	int konec=0;
 	while(konec!=1){
 			new_token();
 			if(token==K_end)
 			{
-
+				
+				vratne=pope(fuj);
+				if(vratne!=NULL) 
+				{
+				
+					ble=generuj(lokal,NULL,NULL,NULL, konec_while);
+					ble->skok=vratne;
+				}
 				konec=1;
 			}
 			else if(token==strednik){ 
@@ -721,38 +806,13 @@ void en()
 				
 				
 			}
-			else {error(2);}
+			else {error(2); } 
 	}
 	
 	
 }
 
-void  prediktiv(){
-	
-	//int g;
-	
-	while(token!=K_end && token!=strednik){
-		new_token();
-		/*if(token==id)
-		{
-				g=over(str_g.data,lokal);//proveri jestli je v lokani tabulce
-			if(g==0)
-			{
-				
-				g=gover(str_g.data);//proveri jestli je v tabulce od main
-				if(g==0) error(3);	
-			}
-			
-		}*/
-				
-				strFree(&str_g);
-				strInit(&str_g);
-			
-		
-	}
-	neww=2;
-	
-}	
+
 
 int proverfukci(){
 struct htab_listglobal *seznam, *pomocna;

@@ -3,21 +3,9 @@
 #include <stdbool.h>
 #include "mystring.h"
 #include "ial.h"
-
-typedef struct tListOpItem {
-
-        int data;
-        struct tListOpItem *lptr;
-        struct tListOpItem *rptr;
-} *tListOpItem;
+#include "predik.h"
 
 
-
-typedef struct {
-    tListOpItem First;
-    tListOpItem Act;
-    tListOpItem Last;
-} tListOp;
 ///////////////
 
 
@@ -59,15 +47,17 @@ void disposeListp (tListOp *L)
 void pushOp(tListOp *L, int OperType)
 {
   tListOpItem newItem;
-  if ((newItem = malloc(sizeof(tListOp))) != NULL) {
+  if ((newItem = malloc(sizeof(tListOpItem))) != NULL) {
     newItem->data = OperType;
-    newItem->lptr = L->Last;
+    newItem->lptr = NULL;
     newItem->rptr = NULL;
     if (L->Last == NULL) {		//  pokud je vkladany prvek prvni
-      L->First = newItem;		//  nastavi prvni prvek na vkladany
+      L->First = newItem;
+		newItem->lptr = newItem;		//  nastavi prvni prvek na vkladany
     }
     else {				//  pokud neni prvnim vkladanym prvkem
-      L->Last->rptr = newItem;		//  zaradi vkladany prvek za posledni prvek seznamu
+      L->Last->rptr = newItem;
+		newItem->lptr = L->Last;		//  zaradi vkladany prvek za posledni prvek seznamu
     }
     L->Last = newItem;			//  aktualizuje posledni prvek na nove vlozeny
   }

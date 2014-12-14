@@ -18,7 +18,6 @@ struct htab_listitem * expr();
 void next();
 void returnn();
 void en();
-void  prediktiv();
 int proverfukci();
 struct htab_listitem * zapisstring();
 struct htab_listitem * zapisint();

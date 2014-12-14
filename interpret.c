@@ -82,6 +82,13 @@ void jede()
 					else error(7);
 			
 			break;
+			case konec_while :
+// 				printf(" skok ");
+				 rozjedemto=rozjedemto->skok;
+				break;
+				case nici :
+				 
+				break;
 			default:
 			printf("nemam");
 			break;
